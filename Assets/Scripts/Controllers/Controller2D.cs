@@ -15,6 +15,7 @@ namespace Controllers
             _boxCollider2D = gameObject.GetComponent<BoxCollider2D>();
             UpdateRaySpacing(); 
             UpdateRaycastOrigins();
+            Collisions.faceDirection = 1;
         }
 
         // Update is called once per frame
@@ -28,11 +29,14 @@ namespace Controllers
         {
             Collisions.Reset();
             UpdateRaycastOrigins();
+
             if (velocity.x != 0)
             {
-                HorizontalCollisions(ref velocity);
-                
-            }if (velocity.y != 0)
+                Collisions.faceDirection = (int) Mathf.Sign(velocity.x);
+            }
+            
+            HorizontalCollisions(ref velocity);
+            if (velocity.y != 0)
             {
                 VerticalCollisions(ref velocity);
             }
@@ -44,8 +48,13 @@ namespace Controllers
 
         private void HorizontalCollisions(ref Vector3 velocity)
         {
-            var directionX = Mathf.Sign(velocity.x);
+            var directionX = Collisions.faceDirection;
             var rayLength = Mathf.Abs(velocity.x) + skinWidth;
+
+            if (Mathf.Abs(velocity.x) < skinWidth)
+            {
+                rayLength = 2 * skinWidth;
+            }
 
             for (var i = 0; i < horizontalRayCount; i++)
             {
@@ -138,6 +147,7 @@ namespace Controllers
         {
             public bool Above, Below;
             public bool Left, Right;
+            public int faceDirection;
 
             public void Reset()
             {
