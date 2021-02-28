@@ -41,3 +41,12 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Player
+    uniqueID: 2605161031
+    locked: 0
+  - name: Gun
+    uniqueID: 3051679873
+    locked: 0
+  - name: Arms
+    uniqueID: 2495239569
+    locked: 0

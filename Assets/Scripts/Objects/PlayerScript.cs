@@ -9,13 +9,15 @@ namespace Objects
     {
         
         private Vector3 _velocity;
-        private Controller2D _controller2D;
+        public Controller2D Controller2D { get; private set; }
+        private Animator _animator;
         // Start is called before the first frame update
         private void Start()
         {
+            _animator = GetComponent<Animator>();
             _gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
             _jumpVelocity = Mathf.Abs(_gravity) * timeToJumpApex;
-            _controller2D = gameObject.GetComponent<Controller2D>();
+            Controller2D = gameObject.GetComponent<Controller2D>();
         }
 
         // Update is called once per frame
@@ -38,6 +40,7 @@ namespace Objects
         
         private float _gravity;
         private float _jumpVelocity;
+        public bool WallSliding { get; private set; }
         
         
         
@@ -46,16 +49,17 @@ namespace Objects
         {
             var input = new Vector2 (Input.GetAxisRaw ("Horizontal"), Input.GetAxisRaw ("Vertical"));
             var targetVelocity = input.x * moveSpeed;
+            WallSliding = false;
             
             _velocity.x = Mathf.SmoothDamp(_velocity.x, targetVelocity, ref _smoothDampVelocity,
-                (_controller2D.Collisions.Below) ? accelerationTimeGrounded : accelerationTimeAirborne);
+                (Controller2D.Collisions.Below) ? accelerationTimeGrounded : accelerationTimeAirborne);
             
-            bool wallSliding = false;
-            int wallDirectionX = (_controller2D.Collisions.Left) ? -1 : 1;
-            if ((_controller2D.Collisions.Left || _controller2D.Collisions.Right) && !_controller2D.Collisions.Below &&
+            
+            int wallDirectionX = (Controller2D.Collisions.Left) ? -1 : 1;
+            if ((Controller2D.Collisions.Left || Controller2D.Collisions.Right) && !Controller2D.Collisions.Below &&
                 _velocity.y < 0)
             {
-                wallSliding = true;
+                WallSliding = true;
                 if (_velocity.y < -_wallSlideSpeedMax)
                 {
                     _velocity.y = -_wallSlideSpeedMax;
@@ -83,14 +87,14 @@ namespace Objects
 
             }
             
-            if (_controller2D.Collisions.Above || _controller2D.Collisions.Below)
+            if (Controller2D.Collisions.Above || Controller2D.Collisions.Below)
             {
                 _velocity.y = 0;
             }
             
             if (Input.GetKeyDown (KeyCode.Space)) 
             {
-                if (wallSliding)
+                if (WallSliding)
                 {
                     
                     if(input.x == 0)
@@ -112,17 +116,20 @@ namespace Objects
                     
                 }
 
-                if (_controller2D.Collisions.Below)
+                if (Controller2D.Collisions.Below)
                 {
                     _velocity.y = _jumpVelocity;
                 }
                 
             }
+            
+            
+            
 
            
-            
+            _animator.SetBool("Walking", Controller2D.Collisions.Below && input.x != 0);
             _velocity.y += _gravity * Time.deltaTime;
-            _controller2D.Move(_velocity * Time.deltaTime);
+            Controller2D.Move(_velocity * Time.deltaTime);
         }
     }
 }
