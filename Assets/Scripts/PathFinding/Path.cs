@@ -1,0 +1,48 @@
+﻿using System.Collections.Generic;
+using UnityEngine;
+
+namespace PathFinding
+{
+    public class Path
+    {
+        public List<Node> PathNodes { get; set; } = new List<Node>();
+        private bool IsEmpty { get; set; } 
+
+        public Path(Node lastNode)
+        {
+            CreatePath(lastNode);
+        }
+
+        private Path()
+        {
+            
+        }
+
+        private void CreatePath(Node node)
+        {
+
+                PathNodes.Add(node);
+                if (node.NodeState == Node.State.Start)
+                {
+                    return;
+                }
+
+                // ReSharper disable once TailRecursiveCall
+                CreatePath(node.Parent);
+        }
+
+        public void Visualize(float time)
+        {
+            if (IsEmpty) return;
+            for (var i = 0; i < PathNodes.Count -1; i++)
+            {
+                Debug.DrawLine(PathNodes[i].CenterWorldPos, PathNodes[i+1].CenterWorldPos, UnityEngine.Color.blue, time);
+            }
+        }
+
+        public static Path Empty()
+        {
+            return new Path(){IsEmpty = true};
+        }
+    }
+}
