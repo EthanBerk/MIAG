@@ -8,19 +8,25 @@ namespace GunMods.Cyberpunk
     public class CyberpunkGun : RaycastProjectileGunModBase, IRaycastProjectileGunMod
     {
         public ParticleSystem projectileParticleSystem;
+        private ParticleSystem projectiles;
         public override void Start()
         {
             base.Start();
-            projectiles = null;
-            var projectile = Instantiate(projectileParticleSystem, shootPoint, gunRotationPoint);
-            projectiles = projectile;
+            projectiles = Instantiate(projectileParticleSystem, shootPoint, gunRotationPoint);
+            projectiles.Play();
+            var projectilesEmission = projectiles.emission;
+            projectilesEmission.enabled = false;
+            
+            
 
         }
 
         public override void Update()
         {
-            projectileParticleSystem.Play();
             base.Update();
+            projectiles.transform.position = shootPoint;
+            projectiles.transform.localRotation = gunRotationPoint;
+            
             if(Input.GetMouseButtonUp(0))
             {
                 var projectilesEmission = projectiles.emission;
@@ -36,11 +42,10 @@ namespace GunMods.Cyberpunk
 
         public float range;
         public LayerMask GunLayerMask;
-        private ParticleSystem projectiles;
+        
         public void OnShoot()
         {
-            projectiles.transform.position = shootPoint;
-            projectiles.transform.rotation = gunRotationPoint;
+
             var projectilesEmission = projectiles.emission;
             projectilesEmission.enabled = true;
 

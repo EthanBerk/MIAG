@@ -43,7 +43,7 @@ namespace GunMods
             var worldPosition = _mainCamera.ScreenToWorldPoint(Input.mousePosition);
             var lookPos = worldPosition - transform.position;
             var leftFacing = false;
-            
+            _mainCamera.transform.position = new Vector3(_player.transform.position.x, _player.transform.position.y, _mainCamera.transform.position.z);
         
             lookPos.Normalize();
         
