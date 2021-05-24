@@ -38,6 +38,12 @@ TagManager:
   - 
   - 
   m_SortingLayers:
+  - name: Wall
+    uniqueID: 1171338567
+    locked: 0
+  - name: Interior
+    uniqueID: 2560326369
+    locked: 0
   - name: Default
     uniqueID: 0
     locked: 0
@@ -49,4 +55,7 @@ TagManager:
     locked: 0
   - name: Arms
     uniqueID: 2495239569
+    locked: 0
+  - name: Facades
+    uniqueID: 1179627029
     locked: 0
