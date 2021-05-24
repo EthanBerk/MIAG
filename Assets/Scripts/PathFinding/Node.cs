@@ -8,13 +8,16 @@ namespace PathFinding
 {
     public class Node
     {
-        public Vector2 GridPos{ get; set; }
+        public int row { get; set; }
+        public int col { get; set; }
         public Vector2 WorldPos { get; set; }
         public Vector2 CenterWorldPos { get; set; }
-        public float FCost { get; set; }
-        public float GCost { get; set; } = 0;
-        public float HCost { get; set; } = 0;
-        public Node Parent { get; set; }
+        public float FCost { get; private set; }
+        public float GCost { get; private set; } = 0;
+        private float HCost { get; set; } = 0;
+        public Node Parent { get; private set; }
+        
+        public Node[,] nodeArray { get; set; }
 
         public enum State
         {
@@ -22,21 +25,12 @@ namespace PathFinding
             Solid,
             Goal,
             Start
-            
         }
         public State NodeState = State.Open;
-
-        
-
-        private readonly float _cellSize;
-
-        public Node(float cellSize)
-        {
-            _cellSize = cellSize;
-        }
+        public float _cellSize { get; set; }
         public void UpdateNodeState( LayerMask colissionMask)
         {
-            var hit = Physics2D.OverlapBox(CenterWorldPos, new Vector2(_cellSize, _cellSize), 0, colissionMask);
+            var hit = Physics2D.OverlapBox(CenterWorldPos, new Vector2(_cellSize - 0.1f, _cellSize - 0.1f), 0, colissionMask);
             if (NodeState == State.Goal || NodeState == State.Start)
             {
             }
@@ -49,11 +43,11 @@ namespace PathFinding
                 NodeState = State.Open;
             }
         }
-
-        public List<Node> Neighbors(Node[,] nodeArray)
+        public List<Node> GetDirectNeighbors()
         {
-            var nodeCol = (int)GridPos.x;
-            var nodeRow = (int)GridPos.y;
+            
+            var nodeCol = col;
+            var nodeRow = row;
             var neighborsList = new List<Node>();
             for (var col = -1; col <= 1; col++)
             {
@@ -72,10 +66,12 @@ namespace PathFinding
             return neighborsList;
         }
 
+        
+
         public void SetParentAndFCost(Node startingNode, Node endNode, Node parentNode)
         {
-            HCost = Vector2.Distance(GridPos, endNode.GridPos);
-            GCost = parentNode.GCost + Vector2.Distance(GridPos, parentNode.GridPos);
+            HCost = Vector2.Distance(new Vector2(col , row), new Vector2(endNode.col, endNode.row));
+            GCost = parentNode.GCost + Vector2.Distance(new Vector2(col , row), new Vector2(parentNode.col, row));
             Parent = parentNode;
             
             FCost = HCost + GCost;

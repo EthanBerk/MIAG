@@ -6,7 +6,7 @@ namespace PathFinding
     public class Path
     {
         public List<Node> PathNodes { get; set; } = new List<Node>();
-        private bool IsEmpty { get; set; } 
+        public bool IsEmpty { get; set; } 
 
         public Path(Node lastNode)
         {
@@ -43,6 +43,16 @@ namespace PathFinding
         public static Path Empty()
         {
             return new Path(){IsEmpty = true};
+        }
+
+        public Node GetNextNode()
+        {
+            return PathNodes[1];
+        }
+
+        public bool NextNodeJump()
+        {
+            return (PathNodes[1].col - PathNodes[0].col > 1) || (PathNodes[1].row - PathNodes[0].row > 1);
         }
     }
 }

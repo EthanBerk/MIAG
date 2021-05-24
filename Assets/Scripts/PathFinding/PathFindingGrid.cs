@@ -11,7 +11,7 @@ namespace PathFinding
     {
         
         public Node[,] NodeArray { get; private set; }
-        private float CellSize { get; set; }
+        public float CellSize { get; set; }
         private readonly Vector2 _origin;
 
         private readonly LayerMask _collisionsMask;
@@ -22,6 +22,7 @@ namespace PathFinding
             CellSize = cellSize;
             NodeArray = new Node[width, height];
             _collisionsMask = collisionsMask;
+            CreateGrid();
 
         }
 
@@ -31,20 +32,23 @@ namespace PathFinding
             CellSize = cellSize;
             NodeArray = new Node[width, height];
             _collisionsMask = collisionsMask;
+            CreateGrid();
         }
 
-        public void CreateGrid()
+        private void CreateGrid()
         {
             for (int row = 0; row < NodeArray.GetLength(0); row++)
             {
                 for (int col = 0; col < NodeArray.GetLength(1); col++)
                 {
-                    NodeArray[row, col] = new Node(CellSize);
+                    NodeArray[row, col] = new Node();
                     var currentNode = NodeArray[row, col];
+                    currentNode._cellSize = CellSize;
                     currentNode.WorldPos = new Vector2(_origin.x + (col * CellSize), _origin.y - (row * CellSize));
                     currentNode.CenterWorldPos = currentNode.WorldPos + new Vector2(CellSize / 2, CellSize / -2);
-                    currentNode.GridPos = new Vector2(col, row);
-                   
+                    currentNode.col = col;
+                    currentNode.row = row;
+                    currentNode.nodeArray = NodeArray;
                 }
             }
             
@@ -86,39 +90,7 @@ namespace PathFinding
             Debug.DrawLine(start, end, Color.red, time);
 
         }
-
-        public Path GeneratePath(Node startNode, Node endNode)
-        {
-            var openNodes = new  List<Node>();
-            var closedNodes = new List<Node>();
-            openNodes.Add(startNode);
-            while (openNodes.Any())
-            {
-                var currentNode = openNodes.OrderBy(node => node.FCost).First();
-                openNodes.Remove(currentNode);
-                closedNodes.Add(currentNode);
-                if (currentNode == endNode)
-                {
-                    return new Path(currentNode);
-                }
-                var currentNeighborNodes = currentNode.Neighbors(NodeArray).Where(neighborNode =>
-                    neighborNode.NodeState != Node.State.Solid && !closedNodes.Contains(neighborNode));
-
-                foreach (var neighborNode in currentNeighborNodes)
-                {
-                    var newGCostToNeighbor =
-                        currentNode.GCost + Vector2.Distance(currentNode.GridPos, neighborNode.GridPos);
-                    if (!(newGCostToNeighbor < neighborNode.GCost) && openNodes.Contains(neighborNode)) continue;
-                    neighborNode.SetParentAndFCost(startNode, endNode, currentNode);
-                    if (!openNodes.Contains(neighborNode))
-                    {
-                        openNodes.Add(neighborNode);
-                    }
-                }
-            }
-            return Path.Empty();
-        }
-
+        
         public Node WorldPosToNode(Vector2 pos)
         {
             for (int row = 0; row < NodeArray.GetLength(0); row++)
@@ -136,6 +108,12 @@ namespace PathFinding
                 }
             }
             return null;
+        }
+
+        public bool InBounds( int row, int col)
+        {
+            return ((col < NodeArray.GetLength(1)) && col >= 0) && (row < NodeArray.GetLength(0)) && row >= 0;
+            
         }
 
     }
