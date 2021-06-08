@@ -4,7 +4,7 @@ using UnityEngine;
 namespace Controllers
 {
     [RequireComponent (typeof (BoxCollider2D))]
-    public class Controller2D : MonoBehaviour
+    public class BoxCollisionController2D : MonoBehaviour
     {
         private BoxCollider2D _boxCollider2D;
         public CollisionInfo Collisions;
