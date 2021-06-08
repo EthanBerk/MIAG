@@ -20,15 +20,21 @@ namespace PathFinding
 
         private void CreatePath(Node node)
         {
-
+            while (true)
+            {
                 PathNodes.Add(node);
+                if (node.Parent == null)
+                {
+                    return;
+                }
+
                 if (node.NodeState == Node.State.Start)
                 {
                     return;
                 }
 
-                // ReSharper disable once TailRecursiveCall
-                CreatePath(node.Parent);
+                node = node.Parent;
+            }
         }
 
         public void Visualize(float time)

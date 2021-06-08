@@ -10,14 +10,16 @@ namespace PathFinding
     public class PathFindingGrid
     {
         
-        public Node[,] NodeArray { get; private set; }
+        public  Node[,] NodeArray { get; private set; }
         public float CellSize { get; set; }
-        private readonly Vector2 _origin;
+        public Vector2 _origin { get; }
+        public Vector2 trueOrigin { get; }
 
         private readonly LayerMask _collisionsMask;
 
         public PathFindingGrid(LayerMask collisionsMask, int width, int height, float cellSize)
         {
+            trueOrigin = Vector2.zero;
             _origin = new Vector2(0, height * cellSize);
             CellSize = cellSize;
             NodeArray = new Node[width, height];
@@ -28,6 +30,7 @@ namespace PathFinding
 
         public PathFindingGrid(LayerMask collisionsMask, int width, int height, float cellSize, Vector2 origin)
         {
+            trueOrigin = origin;
             _origin = new Vector2(origin.x, (height * cellSize) + origin.y); 
             CellSize = cellSize;
             NodeArray = new Node[width, height];
@@ -45,6 +48,7 @@ namespace PathFinding
                     var currentNode = NodeArray[row, col];
                     currentNode._cellSize = CellSize;
                     currentNode.WorldPos = new Vector2(_origin.x + (col * CellSize), _origin.y - (row * CellSize));
+                    currentNode.CenterBottomPos = currentNode.WorldPos + new Vector2(CellSize / 2, -1 * CellSize);
                     currentNode.CenterWorldPos = currentNode.WorldPos + new Vector2(CellSize / 2, CellSize / -2);
                     currentNode.col = col;
                     currentNode.row = row;
@@ -93,21 +97,17 @@ namespace PathFinding
         
         public Node WorldPosToNode(Vector2 pos)
         {
-            for (int row = 0; row < NodeArray.GetLength(0); row++)
+            var col = (int)Mathf.Abs((_origin.x - pos.x) / CellSize);
+            var row = (int)Mathf.Abs((_origin.y - pos.y) / CellSize);
+            try
             {
-                for (int col = 0; col < NodeArray.GetLength(1); col++)
-                {
-                    var currentNode = NodeArray[row, col];
-                    var xPosInNode = pos.x > currentNode.WorldPos.x && pos.x < (currentNode.WorldPos.x + CellSize);
-                    var yPosInNode = pos.y > (currentNode.WorldPos.y - CellSize) && pos.y < currentNode.WorldPos.y;
-                    if (xPosInNode && yPosInNode)
-                    {
-                        return currentNode;
-                    }
-                   
-                }
+                return NodeArray[row, col];
             }
-            return null;
+            catch (Exception)
+            {
+                return null;
+            }
+            
         }
 
         public bool InBounds( int row, int col)

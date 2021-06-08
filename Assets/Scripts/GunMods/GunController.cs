@@ -7,12 +7,12 @@ namespace GunMods
     {
         public GameObject bulletPrefab;
         public float bulletSpeed = 20;
-        public GunManager GunManager;
+        
         private CyberpunkGun _cyberpunkGun;
         
         void Start()
         {
-            GunManager = new GunManager();
+            
             _cyberpunkGun = gameObject.GetComponentInChildren<CyberpunkGun>();
         }
 

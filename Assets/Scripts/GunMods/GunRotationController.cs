@@ -76,7 +76,7 @@ namespace GunMods
 
             if (_PlayerScript.WallSliding)
             {
-                var collisions = _PlayerScript.Controller2D.Collisions;
+                var collisions = _PlayerScript.BoxCollisionController2D.Collisions;
                 if (collisions.Left == leftFacing)
                 {
                     _gunArmAnimator.SetBool("OuterWallhang", true);

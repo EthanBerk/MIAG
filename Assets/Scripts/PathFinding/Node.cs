@@ -12,7 +12,8 @@ namespace PathFinding
         public int col { get; set; }
         public Vector2 WorldPos { get; set; }
         public Vector2 CenterWorldPos { get; set; }
-        public float FCost { get; private set; }
+        public Vector2 CenterBottomPos { get; set; }
+        public float FCost { get; private set; } = 0;
         public float GCost { get; private set; } = 0;
         private float HCost { get; set; } = 0;
         public Node Parent { get; private set; }
@@ -24,7 +25,8 @@ namespace PathFinding
             Open,
             Solid,
             Goal,
-            Start
+            Start,
+            Closed
         }
         public State NodeState = State.Open;
         public float _cellSize { get; set; }
@@ -33,6 +35,7 @@ namespace PathFinding
             var hit = Physics2D.OverlapBox(CenterWorldPos, new Vector2(_cellSize - 0.1f, _cellSize - 0.1f), 0, colissionMask);
             if (NodeState == State.Goal || NodeState == State.Start)
             {
+                
             }
             else if (hit)
             {
@@ -75,6 +78,11 @@ namespace PathFinding
             Parent = parentNode;
             
             FCost = HCost + GCost;
+        }
+
+        public override string ToString()
+        {
+            return "row: " + row + ", " + "col: " + col;
         }
     }
 }
