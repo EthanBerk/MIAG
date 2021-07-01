@@ -12,78 +12,77 @@ namespace Enemies
     {
         public GameObject goal;
         public bool _visualize;
+        public float speed;
 
         public override void Start()
         {
             base.Start();
-            var goalPosition = goal.transform.position;
-            var midPosition = new Vector2(transform.position.x + (goalPosition.x - transform.position.x) / 2,
-                goalPosition.y + dropHeight);
-            DrawParabola(gameObject.transform.position,goalPosition, midPosition, 0.3f, Mathf.Infinity);
-            print(midPosition);
-            var startNode = PathFindingGrid.WorldPosToNode(transform.position);
-            var endNode = PathFindingGrid.WorldPosToNode(goal.transform.position);
-            startNode.NodeState = Node.State.Start;
-            endNode.NodeState = Node.State.Goal;
-            print("(" +startNode.col + " ," + startNode.row +")");
-            print("(" +endNode.col + " ," + endNode.row +")");
             PathFindingGrid.UpdateNodes();
-            
-            Path = PathFinder.GeneratePath(startNode, endNode, this);
-            if (!Path.IsEmpty)
-            {
-                Path.Visualize(Mathf.Infinity);
-            }
-            else
-            {
-                print("empty");
-            }
-            PathFindingGrid.UpdateNodes();
-
-        }
-
-        private Path Path;
-        private bool dooingPath;
-
-
-        public override void Update()
-        {
-            
-            // var startNode = PathFindingGrid.WorldPosToNode(transform.position);
-            // var endNode = PathFindingGrid.WorldPosToNode(goal.transform.position);
-            // startNode.NodeState = Node.State.Start;
-            // endNode.NodeState = Node.State.Goal;
-            // print( "start: "+ "(" +startNode.col + " ," + startNode.row +")");
-            // print("end: "+ "(" +endNode.col + " ," + endNode.row +")");
-            //
-            //
-            // Path = PathFinder.GeneratePath(startNode, endNode, this);
-            // if (!Path.IsEmpty)
+            startNode = PathFindingGrid.WorldPosToNode(transform.position);
+            endNode = PathFindingGrid.WorldPosToNode(goal.transform.position);
+            m_Path = PathFinder.GeneratePath(startNode, endNode, this);
+            // if (!m_Path.IsEmpty)
             // {
-            //     Path.Visualize(Time.deltaTime);
+            //     m_Path.Visualize(Mathf.Infinity, dropHeight * cellSize);
             // }
             // else
             // {
             //     print("empty");
             // }
 
+        }
+
+        private Path m_Path;
+        private bool dooingPath;
+        private bool jumping;
+        private Node startNode;
+        private Node endNode;
 
 
-
-
-
-
-            // if (Path.PathNodes.Count > 1)
-            // {
-            //     velocity = new Vector2(Path.GetNextNode().CenterWorldPos.x, 0);
-            //     
-            // }
+        public override void Update()
+        {
+            PathFindingGrid.UpdateNodes();
             
             
+            startNode = PathFindingGrid.WorldPosToNode(transform.position);
+            endNode = PathFindingGrid.WorldPosToNode(goal.transform.position);
             
-
-
+            
+            if (m_BoxCollisionController2D.Collisions.Below)
+            {
+                m_Path = PathFinder.GeneratePath(startNode, endNode, this);
+            }
+            
+            if (!m_Path.IsEmpty)
+            {
+                m_Path.Visualize(Time.deltaTime, dropHeight * cellSize);
+            }
+            else
+            {
+                print("empty");
+            }
             base.Update();
+            
+            
+            if (m_Path.PathNodes.Count <= 1) return;
+            if (!m_BoxCollisionController2D.Collisions.Below && velocity.y != 0) return;
+            if (Mathf.Abs(m_Path.GetNextNode().col - startNode.col) > 1)
+            {
+                velocity = Math.Abs(transform.position.x - startNode.CenterWorldPos.x) < 0.1
+                    ? jumpTo(m_Path.GetNextNode().CenterWorldPos)
+                    : new Vector2((startNode.CenterWorldPos.x - transform.position.x > 0 ? 1 : -1) * speed, velocity.y);
+            }
+            else
+            {
+                        
+                velocity = new Vector2((m_Path.GetNextNode().col - startNode.col) * speed, velocity.y);  
+            }
+
+
+
+
+
+
         }
         private void OnDrawGizmos()
         {

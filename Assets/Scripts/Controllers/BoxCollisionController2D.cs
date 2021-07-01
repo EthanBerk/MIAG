@@ -40,6 +40,7 @@ namespace Controllers
             {
                 VerticalCollisions(ref velocity);
             }
+            
             transform.Translate(velocity);
         }
 
@@ -95,8 +96,8 @@ namespace Controllers
                
                 velocity.y = (hit.distance - skinWidth) * directionY;
                 rayLength = hit.distance;
-                Collisions.Below = Math.Abs(directionY - (-1)) < 0.1;
-                Collisions.Above = Math.Abs(directionY - 1) < 0.1;
+                Collisions.Below = Math.Abs(directionY + 1) < skinWidth;
+                Collisions.Above = Math.Abs(directionY - 1) < skinWidth;
                 
             }
         }

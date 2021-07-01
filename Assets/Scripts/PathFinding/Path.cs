@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
+using Utils;
 
 namespace PathFinding
 {
@@ -8,9 +9,9 @@ namespace PathFinding
         public List<Node> PathNodes { get; set; } = new List<Node>();
         public bool IsEmpty { get; set; } 
 
-        public Path(Node lastNode)
+        public Path(Node lastNode, Node startNode)
         {
-            CreatePath(lastNode);
+            CreatePath(lastNode, startNode);
         }
 
         private Path()
@@ -18,23 +19,17 @@ namespace PathFinding
             
         }
 
-        private void CreatePath(Node node)
+        private void CreatePath(Node node, Node startNode)
         {
-            while (true)
+
+            PathNodes.Add(node);
+            if (node == startNode)
             {
-                PathNodes.Add(node);
-                if (node.Parent == null)
-                {
-                    return;
-                }
-
-                if (node.NodeState == Node.State.Start)
-                {
-                    return;
-                }
-
-                node = node.Parent;
+                return;
             }
+
+            // ReSharper disable once TailRecursiveCall
+            CreatePath(node.Parent, startNode);
         }
 
         public void Visualize(float time)
@@ -45,6 +40,29 @@ namespace PathFinding
                 Debug.DrawLine(PathNodes[i].CenterWorldPos, PathNodes[i+1].CenterWorldPos, UnityEngine.Color.blue, time);
             }
         }
+        public void Visualize(float time, float jumpHight)
+        {
+            if (IsEmpty) return;
+            for (var i = 0; i < PathNodes.Count -1; i++)
+            {
+                var nextNode = PathNodes[i];
+                var currentNode = PathNodes[i + 1];
+                if (Mathf.Abs(PathNodes[i + 1].row - PathNodes[i].row) > 1)
+                {
+                    var centerPoint =
+                        new Vector2(
+                            currentNode.CenterWorldPos.x +
+                            (nextNode.CenterWorldPos.x - currentNode.CenterWorldPos.x) / 2,
+                            (nextNode.CenterWorldPos.y > currentNode.CenterWorldPos.y? nextNode.CenterWorldPos.y : currentNode.CenterWorldPos.y) + jumpHight);
+                    DrawingUtils.DrawParabola(currentNode.CenterWorldPos, nextNode.CenterWorldPos, centerPoint, Color.blue,  0.01f, time);
+                }
+                else
+                {
+                    Debug.DrawLine(PathNodes[i].CenterWorldPos, PathNodes[i+1].CenterWorldPos, UnityEngine.Color.blue, time);  
+                }
+                
+            }
+        }
 
         public static Path Empty()
         {
@@ -53,7 +71,7 @@ namespace PathFinding
 
         public Node GetNextNode()
         {
-            return PathNodes[1];
+            return PathNodes[PathNodes.Count - 2];
         }
 
         public bool NextNodeJump()

@@ -19,13 +19,14 @@ namespace PathFinding
 
         public Path GeneratePath(Node startNode, Node endNode, Enemy enemy)
         {
-            var localNodeArray = (Node[,])m_PathFindingGrid.NodeArray.Clone();
+            var localNodeArray = (Node[,]) m_PathFindingGrid.NodeArray.Clone();
             var localStartNode = localNodeArray[startNode.row, startNode.col];
             var localEndNode = localNodeArray[endNode.row, endNode.col];
 
             var openNodes = new List<Node>();
             var closedNodes = new List<Node>();
             openNodes.Add(localStartNode);
+
             while (openNodes.Any())
             {
                 var currentNode = openNodes.OrderBy(node => node.FCost).First();
@@ -35,12 +36,12 @@ namespace PathFinding
                 currentNode.NodeState = Node.State.Closed;
                 if (currentNode == localEndNode)
                 {
-                    return new Path(currentNode);
+                    return new Path(currentNode, localStartNode);
                 }
 
                 foreach (var neighborNode in GetNeighbors(enemy, currentNode, localNodeArray))
                 {
-                    if(closedNodes.Contains(neighborNode)) continue;
+                    if (closedNodes.Contains(neighborNode)) continue;
                     var newGCostToNeighbor =
                         currentNode.GCost + Vector2.Distance(new Vector2(currentNode.col, currentNode.row),
                             new Vector2(neighborNode.col, neighborNode.row));
@@ -71,40 +72,37 @@ namespace PathFinding
                     .Where(neighbor => nodeArray[neighbor.row + 1, neighbor.col].NodeState ==
                         Node.State.Solid && neighbor.NodeState != Node.State.Solid));
                 var possibleJumps = new List<Node>();
-                for (var Direction = -1; Direction <= 1; Direction += 2)
-                {
-                    for (var height = gravityEnemy.jumpHeight; height > 1; height--)
-                    {
-                        for (var width = gravityEnemy.jumpWidth; width > 1; width--)
-                        {
-                            Node CurrentNode;
-                            try
-                            {
-                                CurrentNode = nodeArray[node.row - height,
-                                    width * Direction + node.col];
 
-                            }
-                            catch (Exception)
-                            {
-                                continue;
-                            }
-                            
-                            if (CurrentNode.NodeState == Node.State.Solid) continue;
-                            if (nodeArray[CurrentNode.row + 1, CurrentNode.col].NodeState !=
-                                Node.State.Solid) continue;
-                            // if (nodeArray[CurrentNode.row + 1, CurrentNode.col + 1].NodeState ==
-                            //     Node.State.Solid && nodeArray[CurrentNode.row + 1, CurrentNode.col - 1].NodeState ==
-                            //     Node.State.Solid) continue;
-                            
-                            possibleJumps.Add(CurrentNode);
+                for (var height = -gravityEnemy.jumpHeight; height <= gravityEnemy.jumpWidth; height++)
+                {
+                    for (var width = -gravityEnemy.jumpWidth; width <= gravityEnemy.jumpWidth ; width++)
+                    {
+                        if (width == 0 || width == 1 || width == -1 || height == 0 || height == 1 || height == -1) continue;
+                        Node CurrentNode;
+                        try
+                        {
+                            CurrentNode = nodeArray[node.row - height,
+                                width + node.col];
                         }
+                        catch (Exception)
+                        {
+                            continue;
+                        }
+
+                        if (CurrentNode.NodeState == Node.State.Solid) continue;
+                        if (nodeArray[CurrentNode.row + 1, CurrentNode.col].NodeState !=
+                            Node.State.Solid) continue;
+                        if (nodeArray[CurrentNode.row + 1, CurrentNode.col + 1].NodeState ==
+                            Node.State.Solid && nodeArray[CurrentNode.row + 1, CurrentNode.col - 1].NodeState ==
+                            Node.State.Solid) continue;
+
+                        possibleJumps.Add(CurrentNode);
                     }
                 }
 
-                
 
-                
-                Neighbors.AddRange(TestPossibleJumps(possibleJumps, node, gravityEnemy.Size, (int) gravityEnemy.dropHeight, 0.25f, nodeArray));
+                Neighbors.AddRange(TestPossibleJumps(possibleJumps, node, gravityEnemy.Size,
+                    (int) gravityEnemy.dropHeight, 0.25f, nodeArray));
             }
 
 
@@ -131,7 +129,6 @@ namespace PathFinding
                         }
                         else
                         {
-                            
                         }
                     }
                     catch (Exception)
@@ -147,21 +144,22 @@ namespace PathFinding
         }
 
 
-        private List<Node> TestPossibleJumps(List<Node> possibleJumps, Node currentNode, Vector2 size, int dropHeight,
+        private List<Node> TestPossibleJumps(List<Node> possibleJumps, Node currentNode, Vector2 size,
+            int dropHeight,
             float increment, Node[,] nodeArray)
         {
-            
             var goodJumps = new List<Node>();
             if (!possibleJumps.Any()) return goodJumps;
             var startingPoint = new Vector2(currentNode.CenterBottomPos.x,
-                currentNode.CenterBottomPos.y + (size.y/2) * m_PathFindingGrid.CellSize);
+                currentNode.CenterBottomPos.y + (size.y / 2) * m_PathFindingGrid.CellSize);
             foreach (var jump in possibleJumps)
             {
                 var endPoint = new Vector2(jump.CenterBottomPos.x,
-                    jump.CenterBottomPos.y + (size.y/2) * m_PathFindingGrid.CellSize);
-                var apex = new Vector2(startingPoint.x + (endPoint.x - startingPoint.x) / 2, endPoint.y + dropHeight);
+                    jump.CenterBottomPos.y + (size.y / 2) * m_PathFindingGrid.CellSize);
+                var apex = new Vector2(startingPoint.x + (endPoint.x - startingPoint.x) / 2,
+                    (endPoint.y > startingPoint.y? endPoint.y : startingPoint.y) + dropHeight);
                 if (m_PathFindingGrid.WorldPosToNode(apex).Equals(null)) break;
-                
+
 
                 var matrix = Matrix<float>.Build.DenseOfArray(new float[,]
                 {
@@ -180,16 +178,17 @@ namespace PathFinding
                 var b = finalValues[1, 0];
                 var c = finalValues[2, 0];
                 var adjIncrement = ((endPoint.x > startingPoint.x) ? 1f : -1f) * increment;
-                for (var x = startingPoint.x + ((endPoint.x > startingPoint.x) ? 1f : -1f)* 0.01f; Mathf.Abs(x - startingPoint.x) < Mathf.Abs(endPoint.x - startingPoint.x); x += adjIncrement)
+                for (var x = startingPoint.x + ((endPoint.x > startingPoint.x) ? 1f : -1f) * 0.01f;
+                    Mathf.Abs(x - startingPoint.x) < Mathf.Abs(endPoint.x - startingPoint.x);
+                    x += adjIncrement)
                 {
-                    
                     var y = (a * Mathf.Pow(x, 2f)) + (b * x) + c;
-                    
+
                     // var startPoint = new Vector2(x, y);
                     // var endDot = new Vector2((x + adjIncrement),
                     //     (a * Mathf.Pow((x + adjIncrement), 2f)) + (b * (x + adjIncrement)) + c);
                     // Debug.DrawLine(startPoint, endDot, Color.red, Mathf.Infinity);
-                    //
+                    
                     var xNode = Mathf.Abs(m_PathFindingGrid._origin.x - x) / m_PathFindingGrid.CellSize;
                     var yNode = (Mathf.Abs(m_PathFindingGrid._origin.y - y) / m_PathFindingGrid.CellSize);
                     if (CheckBoxForCollision(xNode, yNode, size))
@@ -198,28 +197,25 @@ namespace PathFinding
                         {
                             goodJumps.Remove(jump);
                         }
+
                         break;
                     }
-                    if(!goodJumps.Contains(jump)) goodJumps.Add(jump);
-                    
+
+                    if (!goodJumps.Contains(jump)) goodJumps.Add(jump);
                 }
 
-                
-                for (var x = startingPoint.x;
-                    Mathf.Abs(x - startingPoint.x) < Mathf.Abs(endPoint.x - startingPoint.x);
-                    x += adjIncrement)
-                {
-                    var y = (a * Mathf.Pow(x, 2f)) + (b * x) + c;
-                    var startPoint = new Vector2(x, y);
-                    var endDot = new Vector2((x + adjIncrement),
-                        (a * Mathf.Pow((x + adjIncrement), 2f)) + (b * (x + adjIncrement)) + c);
-                    Debug.DrawLine(startPoint, endDot, (goodJumps.Contains(jump)? Color.blue : Color.red), Mathf.Infinity);
-                    
-                }
-                
 
-
-
+                // for (var x = startingPoint.x;
+                //     Mathf.Abs(x - startingPoint.x) < Mathf.Abs(endPoint.x - startingPoint.x);
+                //     x += adjIncrement)
+                // {
+                //     var y = (a * Mathf.Pow(x, 2f)) + (b * x) + c;
+                //     var startPoint = new Vector2(x, y);
+                //     var endDot = new Vector2((x + adjIncrement),
+                //         (a * Mathf.Pow((x + adjIncrement), 2f)) + (b * (x + adjIncrement)) + c);
+                //     Debug.DrawLine(startPoint, endDot, (goodJumps.Contains(jump)? Color.blue : Color.red), Mathf.Infinity);
+                //     
+                // }
             }
 
             return goodJumps;
