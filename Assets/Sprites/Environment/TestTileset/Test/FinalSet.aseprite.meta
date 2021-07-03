@@ -27,7 +27,7 @@ ScriptedImporter:
     filterMode: 0
     alphaIsTransparency: 1
   colabOptions:
-    exportToFile: 0
+    exportToFile: 1
     exportDirectory: Sprites/{filename}
   animationOptions: []
   sheetData:
@@ -58,6 +58,431 @@ ScriptedImporter:
         h: 33
       scale: 1
       frameTags: []
-      slices: []
-    pathToSheetData: Temp/UnityTempFile-62d5bb5bb27e8cb49a2f284a7e8d7f6a/asetempexports/FinalSet_data.json
+      slices:
+      - name: Slice 1
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 24
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 2
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 20
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 3
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 8
+            y: 16
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 4
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 16
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 5
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 16
+            y: 16
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 6
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 16
+            y: 12
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 7
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 20
+            y: 12
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 8
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 24
+            y: 12
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 9
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 16
+            y: 8
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 10
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 8
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 11
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 4
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 12
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 0
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 13
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 8
+            y: 8
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 14
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 8
+            y: 12
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 15
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 4
+            y: 12
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 16
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 0
+            y: 12
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 17
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 28
+            y: 8
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 18
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 32
+            y: 8
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 19
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 36
+            y: 8
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 20
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 36
+            y: 4
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 21
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 36
+            y: 0
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 22
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 32
+            y: 0
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 23
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 28
+            y: 0
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 24
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 28
+            y: 4
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 25
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 32
+            y: 4
+            w: 4
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+    pathToSheetData: Temp/UnityTempFile-500b5b8f3d8331c45b5c20add731e2c5/asetempexports/FinalSet_data.json
     aseFileName: Assets/Sprites/Environment/TestTileset/Test/FinalSet.aseprite

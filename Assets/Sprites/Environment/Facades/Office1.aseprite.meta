@@ -31,16 +31,33 @@ ScriptedImporter:
     exportDirectory: Sprites/{filename}
   animationOptions: []
   sheetData:
-    frames: []
+    frames:
+    - filename: Office1__frame1
+      frame:
+        x: 0
+        y: 0
+        w: 192
+        h: 64
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 192
+        h: 64
+      sourceSize:
+        w: 192
+        h: 64
+      duration: 100
     meta:
-      version: 
-      image: 
-      format: 
+      version: 1.2.25-x64
+      image: Office1_sheet.png
+      format: RGBA8888
       size:
-        w: 0
-        h: 0
-      scale: 0
+        w: 192
+        h: 64
+      scale: 1
       frameTags: []
       slices: []
-    pathToSheetData: 
-    aseFileName: 
+    pathToSheetData: Temp/UnityTempFile-d540a10c45948cc47a28b4719264879d/asetempexports/Office1_data.json
+    aseFileName: Assets/Sprites/Environment/Facades/Office1.aseprite
