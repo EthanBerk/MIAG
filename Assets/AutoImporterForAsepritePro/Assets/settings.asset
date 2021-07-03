@@ -12,4 +12,4 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ed4fc04214b2ab74be7605f58295605, type: 3}
   m_Name: settings
   m_EditorClassIdentifier: 
-  pathToAsepriteExecutable: /home/anton/bin/aseprite
+  pathToAsepriteExecutable: C:\Program Files\Aseprite\Aseprite.exe
