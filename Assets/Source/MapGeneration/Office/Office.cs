@@ -8,6 +8,7 @@ using Random = UnityEngine.Random;
 
 namespace MapGeneration.Office
 {
+    [Serializable]
     public class Office : MonoBehaviour
     {
         public int seed;
