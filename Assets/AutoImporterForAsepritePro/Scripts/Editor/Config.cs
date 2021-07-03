@@ -2,7 +2,7 @@
 {
     public static class Config
     {
-        public static bool IsLiteVersion = false;
+        public static bool IsLiteVersion = true;
 
         public static string AssetDir =
             IsLiteVersion ? "Assets/AutoImporterForAsepriteLite/" : "Assets/AutoImporterForAsepritePro/";
