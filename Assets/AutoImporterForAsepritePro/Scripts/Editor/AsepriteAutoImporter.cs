@@ -37,12 +37,6 @@ namespace AutoImporterForAseprite
             var tempDir = GetTempFolder();
             var sheetDataFile = $"{tempDir}/{aseWorker.AseFileNoExt}_data.json".Replace(" ", "");
 
-            if (animationOptions == null)
-            {
-                animationOptions = new List<NamedAnimationOption>();
-            }
-            
-            
             var animationOptionsDictionary = animationOptions.ToDictionary(e => e.tagName, e => e.animationOptions);
 
             if (colabOptions.exportToFile)
