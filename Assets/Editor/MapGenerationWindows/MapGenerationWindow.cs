@@ -18,14 +18,15 @@ namespace Editor.MapGenerationWindows
 
         private void OnEnable()
         {
-            if (m_MapGenerationCyberpunk == null)
-                m_MapGenerationCyberpunk = new MapGenerationCyberpunk();
+            if (!m_MapGenerationCyberpunk) MapGenerationCyberpunk.getMapGenrationCyberpunk();
         }
 
         private void OnGUI()
         {
+            if (!m_MapGenerationCyberpunk) m_MapGenerationCyberpunk = MapGenerationCyberpunk.getMapGenrationCyberpunk();
             m_MapGenerationCyberpunk.publicFloat = EditorGUILayout.Slider(m_MapGenerationCyberpunk.publicFloat, 0, 10);
             m_MapGenerationCyberpunk.OnGui();
+            if(GUI.changed) m_MapGenerationCyberpunk.Save();
         }
     }
 }
