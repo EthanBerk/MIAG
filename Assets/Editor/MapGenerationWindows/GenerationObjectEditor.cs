@@ -10,62 +10,54 @@ namespace Editor.MapGenerationWindows
     [CustomEditor(typeof(GenerationObject))]
     public class GenerationObjectEditor : UnityEditor.Editor
     {
-        private SerializedProperty m_GenerationAreas;
-        private SerializedProperty m_GenerationAreasLength;
+        private SerializedProperty generationArea;
         
-        
-        private GenerationObject m_GenerationObject;
+        private SerializedProperty cellSize;
+
+
+
+
 
         private Sprite sprite;
-        private SerializedProperty test;
-        private GenerationArea genArea;
+        
         private string tag;
+        private bool enabeld;
         
         private void OnEnable()
         {
-            m_GenerationObject = target as GenerationObject;
-            sprite = m_GenerationObject.gameObject.GetComponent<SpriteRenderer>().sprite;
+            Debug.Log(EditorUtility.IsPersistent(target));
+            generationArea = serializedObject.FindProperty(nameof(GenerationObject.test));
+            cellSize = serializedObject.FindProperty(nameof(GenerationObject.cellSize));
             
-            
-            
-
         }
 
         public override void OnInspectorGUI()
         {
-            serializedObject.Update();
-            m_GenerationAreas = serializedObject.FindProperty("GenerationAreas");
-            m_GenerationAreasLength = serializedObject.FindProperty("AmountOfAreas");
-            test = serializedObject.FindProperty("test");
-            if (m_GenerationAreas.arraySize != m_GenerationAreasLength.intValue)
-            {
-                var isAdd = m_GenerationAreas.arraySize < m_GenerationAreasLength.intValue;
             
-            
-                for (int i = 0; i < (isAdd ? m_GenerationAreasLength.intValue : m_GenerationAreas.arraySize); i++)
-                {
-                    if (i >= m_GenerationAreas.arraySize && isAdd)
-                    
-                    {
-                        m_GenerationAreas.InsertArrayElementAtIndex(i);
-                    }
-                    if (i >= m_GenerationAreasLength.intValue && !isAdd)
-                    {
-                        m_GenerationAreas.DeleteArrayElementAtIndex(i);
-                    }
-                }
-            }
-            
-            EditorGUILayout.PropertyField(m_GenerationAreasLength);
-            EditorGUILayout.PropertyField(test);
-            
-            
-            
-            serializedObject.ApplyModifiedProperties();
         }
+        
 
         private void OnSceneGUI()
         {
+            serializedObject.Update();
+            if (Event.current.type == EventType.MouseDown)
+            {
+                
+                var mouseDown = Event.current.button == 0;
+                var mousePos = Camera.current.ScreenToWorldPoint(Event.current.mousePosition);
+                Debug.Log(mousePos.y);
+                if (!(mousePos.x < 0) && !(mousePos.y < 0) && !(mousePos.x > 4 * 1) &&
+                    !(mousePos.y > 4 * 1))
+                {
+                    var row = Mathf.FloorToInt(mousePos.y - 1);
+                    var col = Mathf.FloorToInt(mousePos.x);
+                    if (GenerationArea.GetValue(generationArea, row, col, 4) != mouseDown)
+                    {
+                        GenerationArea.EditGenerationArea(generationArea, row, col, mouseDown, 4);
+                    }
+                }
+            }
+            serializedObject.ApplyModifiedProperties();
             
         }
     }
