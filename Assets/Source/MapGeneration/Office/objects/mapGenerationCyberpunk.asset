@@ -12,5 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7ccdc9ef01844fdb8a9fdba616d42005, type: 3}
   m_Name: mapGenerationCyberpunk
   m_EditorClassIdentifier: 
-  coolFloat: 7.54
-  publicFloat: 8.06
+  coolFloat: 9.92
+  publicFloat: 0

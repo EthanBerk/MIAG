@@ -8,7 +8,7 @@ namespace Editor.MapGenerationWindows
     {
         private MapGenerationCyberpunk m_MapGenerationCyberpunk;
         
-        [MenuItem("Window/Map Generation")] [SerializeField]
+        [MenuItem("Window/Map Generation/MapGen")] [SerializeField]
         private static void ShowWindow()
         {
             var window = GetWindow<MapGenerationWindow>();

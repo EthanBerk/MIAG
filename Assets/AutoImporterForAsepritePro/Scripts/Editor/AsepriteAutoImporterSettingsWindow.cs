@@ -22,6 +22,7 @@ namespace AsepriteAutoImporter.Editor
 
         private void OnGUI()
         {
+            
             if (!settings)
                 settings = AsepriteAutoImporterSettings.GetSettings();
 

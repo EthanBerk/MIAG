@@ -9,10 +9,11 @@ namespace Source.MapGeneration
     public class GenerationObject : MonoBehaviour
     {
 
-        
+
         [SerializeField] private int AmountOfAreas;
         [SerializeField] public GenerationArea test = new GenerationArea();
         public float cellSize = 1;
+        
 
 #if UNITY_EDITOR
         private void OnDrawGizmos()

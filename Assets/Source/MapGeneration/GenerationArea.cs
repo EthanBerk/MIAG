@@ -15,12 +15,6 @@ namespace Source.MapGeneration
 
         public bool TestBool;
 
-
-
-
-
-
-
         private int Cols = 4;
 
         private int Rows = 4;
@@ -56,7 +50,7 @@ namespace Source.MapGeneration
                 for (var col = 0; col < Cols; col++)
                 {
                     var color = this[row, col] ? Color.blue : Color.red;
-                    var BottomLeft = origin + new Vector2(col * cellSize, Rows - row * cellSize);
+                    var BottomLeft = origin + new Vector2(col * cellSize, (Rows  -1) - row * cellSize);
                     var center = BottomLeft + new Vector2(cellSize / 2, cellSize / 2);
                     Gizmos.color = color;
                     Gizmos.DrawCube(center, new Vector3(cellSize, cellSize, 0));
