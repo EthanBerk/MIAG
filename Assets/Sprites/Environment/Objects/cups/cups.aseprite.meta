@@ -1,0 +1,233 @@
+fileFormatVersion: 2
+guid: f2d2abcc6d29de347ab0fcd7ef9e9eae
+ScriptedImporter:
+  internalIDToNameTable: []
+  externalObjects: {}
+  serializedVersion: 2
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
+  script: {fileID: 11500000, guid: 1bfdceb9b4ffcac5db7031615ac132db, type: 3}
+  importOptions:
+    scale: 1
+    splitLayers: 0
+    splitSlices: 1
+    fileNameFormat: '{title}_{tag}_frame{tagframe1}'
+    ditheringAlgorithmType: 0
+    ditheringMatrixType: 0
+    colorMode: 0
+  spriteImportOptions:
+    pixelsPerUnit: 100
+    pivot: {x: 0.5, y: 0.5}
+    extrude: 0
+    meshType: 1
+    border: {x: 0, y: 0, z: 0, w: 0}
+  textureCreationOptions:
+    textureWrapMode: 1
+    filterMode: 0
+    alphaIsTransparency: 1
+  colabOptions:
+    exportToFile: 0
+    exportDirectory: Sprites/{filename}
+  animationOptions: []
+  sheetData:
+    frames:
+    - filename: cups__frame1
+      frame:
+        x: 0
+        y: 0
+        w: 29
+        h: 9
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 29
+        h: 9
+      sourceSize:
+        w: 29
+        h: 9
+      duration: 100
+    meta:
+      version: 1.2.25-x64
+      image: cups_sheet.png
+      format: RGBA8888
+      size:
+        w: 29
+        h: 9
+      scale: 1
+      frameTags: []
+      slices:
+      - name: Slice 1
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 24
+            y: 5
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 2
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 24
+            y: 0
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 3
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 18
+            y: 0
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 4
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 0
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 5
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 6
+            y: 0
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 6
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 0
+            y: 0
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 7
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 0
+            y: 5
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 8
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 6
+            y: 5
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 9
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 12
+            y: 5
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+      - name: Slice 10
+        color: '#0000ffff'
+        keys:
+        - frame: 0
+          bounds:
+            x: 18
+            y: 5
+            w: 5
+            h: 4
+          center:
+            x: 0
+            y: 0
+            w: 0
+            h: 0
+          pivot:
+            x: 0
+            y: 0
+    pathToSheetData: Temp/UnityTempFile-8455db5beebddf343b9bef97e5c9b812/asetempexports/cups_data.json
+    aseFileName: Assets/Sprites/Environment/Objects/cups/cups.aseprite
