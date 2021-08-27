@@ -14,22 +14,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   LargeSprite: {fileID: 0}
   SmallSprite: {fileID: 0}
-  StatEffects:
-  - Stat: 0
-    LowerBound: 0
-    UpperBound: 0
-    Curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
-  - Stat: 0
-    LowerBound: 0
-    UpperBound: 0
-    Curve:
-      serializedVersion: 2
-      m_Curve: []
-      m_PreInfinity: 0
-      m_PostInfinity: 0
-      m_RotationOrder: 0
+  StatEffects: []
