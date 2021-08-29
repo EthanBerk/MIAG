@@ -10,10 +10,10 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f211ce5762364e61910105f0be6d64a9, type: 3}
-  m_Name: Test
+  m_Name: GunMod 2
   m_EditorClassIdentifier: 
   GunModController: {fileID: 0}
   LargeSprite: {fileID: 0}
   SmallSprite: {fileID: 0}
   StatEffects: []
-  gunModType: 1
+  gunModType: 0

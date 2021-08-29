@@ -9,11 +9,14 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f211ce5762364e61910105f0be6d64a9, type: 3}
-  m_Name: Test
+  m_Script: {fileID: 11500000, guid: 2ba0500e4e6d4c0ba636a6345eb5ab29, type: 3}
+  m_Name: GunModController
   m_EditorClassIdentifier: 
-  GunModController: {fileID: 0}
-  LargeSprite: {fileID: 0}
-  SmallSprite: {fileID: 0}
-  StatEffects: []
-  gunModType: 1
+  o: 192
+  name: 
+  description: 
+  enemyModel: {fileID: 0}
+  health: 20
+  speed: 2
+  detectRange: 10
+  damage: 1

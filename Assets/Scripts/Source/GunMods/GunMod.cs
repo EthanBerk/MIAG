@@ -1,12 +1,14 @@
 ﻿using System.Collections.Generic;
+using Attributes;
 using UnityEngine;
 
 namespace GunMods
 {
     
-    [CreateAssetMenu(fileName = "GunMod", menuName = "GunMod", order = 0)]
+    [CreateAssetMenu(fileName = "GunMod", menuName = "GunMods/GunMod", order = 10)]
     public class GunMod : ScriptableObject
     {
+        [Expandable]
         public GunModController GunModController;
         
         [SerializeField] public Sprite LargeSprite;
@@ -15,6 +17,7 @@ namespace GunMods
 
         [SerializeField] public List<StatEffect> StatEffects;
 
+        
         public GunModType gunModType;
 
 
