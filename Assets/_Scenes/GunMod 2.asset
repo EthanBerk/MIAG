@@ -15,5 +15,6 @@ MonoBehaviour:
   GunModController: {fileID: 0}
   LargeSprite: {fileID: 0}
   SmallSprite: {fileID: 0}
+  I: 3
   StatEffects: []
   gunModType: 0
