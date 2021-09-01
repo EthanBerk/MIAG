@@ -14,8 +14,6 @@ namespace GunMods
         [SerializeField] public Sprite LargeSprite;
 
         [SerializeField] public Sprite SmallSprite;
-        
-        [SerializeField] public int SmallSprite;
 
         [SerializeField] public List<StatEffect> StatEffects;
 
