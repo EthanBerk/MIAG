@@ -9,7 +9,7 @@ namespace Editor.GunMods
     public class GunModEditor : UnityEditor.Editor
     {
         private SerializedProperty GunModController;
-        
+        //TODO
         private void OnEnable()
         {
             serializedObject.Update();
