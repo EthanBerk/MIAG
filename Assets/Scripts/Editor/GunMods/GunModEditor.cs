@@ -9,20 +9,22 @@ namespace Editor.GunMods
     public class GunModEditor : UnityEditor.Editor
     {
         private SerializedProperty GunModController;
-        //TODO
+        
         private void OnEnable()
         {
             serializedObject.Update();
             GunModController = serializedObject.FindProperty(nameof(GunMod.GunModController));
+            var gunModController = CreateInstance<GunModController>();
+            EditorUtility.SetDirty(gunModController);
+            GunModController.objectReferenceValue = gunModController;
             
-            GunModController.objectReferenceValue = CreateInstance<GunModController>();
             
             serializedObject.ApplyModifiedProperties();
         }
 
         public override void OnInspectorGUI()
         {
-            
+          
             base.OnInspectorGUI();
             serializedObject.Update();
             
