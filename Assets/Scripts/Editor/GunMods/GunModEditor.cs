@@ -8,18 +8,11 @@ namespace Editor.GunMods
     [CustomEditor(typeof(GunMod))]
     public class GunModEditor : UnityEditor.Editor
     {
-        private SerializedProperty GunModController;
+        private SerializedProperty _gunModController;
         
         private void OnEnable()
         {
-            serializedObject.Update();
-            GunModController = serializedObject.FindProperty(nameof(GunMod.GunModController));
-            var gunModController = CreateInstance<GunModController>();
-            EditorUtility.SetDirty(gunModController);
-            GunModController.objectReferenceValue = gunModController;
             
-            
-            serializedObject.ApplyModifiedProperties();
         }
 
         public override void OnInspectorGUI()
@@ -27,30 +20,16 @@ namespace Editor.GunMods
           
             base.OnInspectorGUI();
             serializedObject.Update();
-            
-
-            if(GunModController.objectReferenceValue != null)
-                
-            switch (serializedObject.FindProperty(nameof(GunMod.gunModType)).enumValueIndex)
+            _gunModController = serializedObject.FindProperty(nameof(GunMod.GunModController));
+            if (_gunModController.objectReferenceValue == null)
             {
-                case 0:
-                    if (GunModController.objectReferenceValue.GetType() != typeof(BaseGunModController))
-                        GunModController.objectReferenceValue = CreateInstance<BaseGunModController>();
-                    break;
-                case 1:
-                    if (GunModController.objectReferenceValue.GetType() != typeof(GunModController))
-                        GunModController.objectReferenceValue = CreateInstance<GunModController>();
-                    
-                    break;
+                Debug.Log("wow");
+                var gunModController = CreateInstance<GunModController>();
+                AssetDatabase.AddObjectToAsset(gunModController, AssetDatabase.GetAssetPath(serializedObject.targetObject));
+                AssetDatabase.SaveAssets();
+                _gunModController.objectReferenceValue = gunModController;
             }
-            Debug.Log(GunModController.objectReferenceValue != null);
-            if(GunModController.objectReferenceValue != null) 
-                EditorUtility.SetDirty(GunModController.objectReferenceValue);
             serializedObject.ApplyModifiedProperties();
-            
-            
-            
-            
         }
     }
 }

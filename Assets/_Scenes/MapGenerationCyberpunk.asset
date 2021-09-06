@@ -9,12 +9,8 @@ MonoBehaviour:
   m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: f211ce5762364e61910105f0be6d64a9, type: 3}
-  m_Name: GunMod 2
+  m_Script: {fileID: 11500000, guid: 7ccdc9ef01844fdb8a9fdba616d42005, type: 3}
+  m_Name: MapGenerationCyberpunk
   m_EditorClassIdentifier: 
-  GunModController: {fileID: 0}
-  LargeSprite: {fileID: 0}
-  SmallSprite: {fileID: 0}
-  I: 3
-  StatEffects: []
-  gunModType: 0
+  coolFloat: 0
+  publicFloat: 0
