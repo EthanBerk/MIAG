@@ -17,7 +17,7 @@ ScriptedImporter:
     ditheringMatrixType: 0
     colorMode: 0
   spriteImportOptions:
-    pixelsPerUnit: 100
+    pixelsPerUnit: 1
     pivot: {x: 0.5, y: 0.5}
     extrude: 0
     meshType: 1
@@ -31,16 +31,33 @@ ScriptedImporter:
     exportDirectory: Sprites/{filename}
   animationOptions: []
   sheetData:
-    frames: []
+    frames:
+    - filename: GunnerDrone1__frame1
+      frame:
+        x: 0
+        y: 0
+        w: 59
+        h: 24
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 59
+        h: 24
+      sourceSize:
+        w: 59
+        h: 24
+      duration: 100
     meta:
-      version: 
-      image: 
-      format: 
+      version: 1.2.25-x64
+      image: GunnerDrone1_sheet.png
+      format: RGBA8888
       size:
-        w: 0
-        h: 0
-      scale: 0
+        w: 59
+        h: 24
+      scale: 1
       frameTags: []
       slices: []
-    pathToSheetData: 
-    aseFileName: 
+    pathToSheetData: Temp/UnityTempFile-d164ddfe3f1ab1047ba33066166701e8/asetempexports/GunnerDrone1_data.json
+    aseFileName: Assets/Sprites/Enemies/GunnerDrone1.aseprite
