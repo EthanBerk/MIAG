@@ -15,26 +15,27 @@ namespace Editor.GunMods
         }
 
         private Sprite _sprite;
+        private Texture2D _workTexture2D;
 
         private void OnGUI()
         {
             _sprite = EditorGUILayout.ObjectField(_sprite, typeof(Sprite), false) as Sprite;
+            _workTexture2D = Instantiate(_sprite.texture);
             var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandWidth(true),
                 GUILayout.ExpandHeight(true));
-            var smallerDistance = (rect.width < rect.height)? rect.width : rect.height;
-            var adjRect = new Rect(rect.position, new Vector2(smallerDistance, smallerDistance));
-            var spriteTexture = Sprite.Create(_sprite.texture, _sprite.textureRect, Vector2.zero, 16).texture;
-            var spriteSize  = _sprite.bounds.size;
-            var finalTexture = new Texture2D(Mathf.RoundToInt(spriteSize.x) + 2, Mathf.RoundToInt(spriteSize.y) + 2);
-            // var pixels = spriteTexture.GetPixels(  
-            //     (int)_sprite.textureRect.x, 
-            //     (int)_sprite.textureRect.y, 
-            //     (int)_sprite.textureRect.width, 
-            //     (int)_sprite.textureRect.height );
-            // finalTexture.SetPixels(pixels);
-            // finalTexture.Apply();
+            var smallerDistance = Mathf.FloorToInt((rect.width / _sprite.textureRect.width < rect.height / _sprite.textureRect.height)? rect.width / _sprite.textureRect.width : rect.height / _sprite.textureRect.height);
             
-            GUI.DrawTexture(_sprite.textureRect, spriteTexture);
+            var adjRect = new Rect(rect.position, new Vector2(smallerDistance * _sprite.textureRect.width, smallerDistance * _sprite.textureRect.height));
+            var spriteTexture = Sprite.Create(_workTexture2D, _sprite.textureRect, Vector2.zero, 16).texture;
+            spriteTexture.Resize(spriteTexture.width + 2, spriteTexture.height + 2);
+            spriteTexture.Apply();
+            
+            spriteTexture.SetPixel(0,0, Color.red);
+            spriteTexture.SetPixel(spriteTexture.width,0, Color.red);
+            spriteTexture.SetPixel(0,spriteTexture.height, Color.red);
+            spriteTexture.SetPixel(spriteTexture.width,spriteTexture.height, Color.red);
+            spriteTexture.Apply();
+            GUI.DrawTexture(adjRect, spriteTexture);
         }
     }
 }
