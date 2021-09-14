@@ -9,7 +9,7 @@ namespace GunMods
     [CreateAssetMenu(fileName = "GunModController", menuName = "GunMods/GunModController", order = 10)]
     public class GunModController : ScriptableObject
     {
-        [SerializeField] private int o = 8;
+        
         public new string name;
         public string description;
         public GameObject enemyModel;

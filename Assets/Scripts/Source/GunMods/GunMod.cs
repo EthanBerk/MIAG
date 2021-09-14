@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Attributes;
+using Objects;
 using UnityEngine;
 
 namespace GunMods
@@ -11,11 +12,15 @@ namespace GunMods
         [Expandable]
         public GunModController GunModController;
         
-        [SerializeField] public Sprite LargeSprite;
+        [HideInInspector] public Sprite LargeSprite;
 
         [SerializeField] public Sprite SmallSprite;
 
         [SerializeField] public List<StatEffect> StatEffects;
+        
+        [SerializeField] public Serializable2DArray<bool> attachmentArea;
+        
+        
 
         
         public GunModType gunModType;

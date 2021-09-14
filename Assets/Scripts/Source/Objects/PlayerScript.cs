@@ -19,6 +19,8 @@ namespace Objects
             _gravity = -(2 * jumpHeight) / Mathf.Pow(timeToJumpApex, 2);
             _jumpVelocity = Mathf.Abs(_gravity) * timeToJumpApex;
             BoxCollisionController2D = gameObject.GetComponent<BoxCollisionController2D>();
+
+
         }
 
         // Update is called once per frame

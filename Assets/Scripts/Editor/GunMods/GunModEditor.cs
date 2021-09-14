@@ -1,5 +1,6 @@
 ﻿using System;
 using GunMods;
+using Objects;
 using UnityEditor;
 using UnityEngine;
 
@@ -51,7 +52,15 @@ namespace Editor.GunMods
                     _gunModController.objectReferenceValue = gunModController;
                 }
             }
+            var sprite = serializedObject.FindProperty(nameof(GunMod.LargeSprite));
             
+            EditorGUI.BeginChangeCheck();
+            EditorGUILayout.PropertyField(sprite);
+            if (EditorGUI.EndChangeCheck())
+            {
+                ((GunMod) target).attachmentArea = new Serializable2DArray<bool>(Mathf.RoundToInt(((Sprite) sprite.objectReferenceValue).textureRect.width + 2), Mathf.RoundToInt(((Sprite) sprite.objectReferenceValue).textureRect.height + 2));
+            }
+
             serializedObject.ApplyModifiedProperties();
         }
     }
