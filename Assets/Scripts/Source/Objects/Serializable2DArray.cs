@@ -29,22 +29,32 @@ namespace Objects
         {
             get
             {
-                if (row * Rows + col >= area.Length || row * Rows + col < 0)
+                if (row * Cols + col >= area.Length || row * Cols + col < 0)
                 {
                     throw new IndexOutOfRangeException("Out Of Bounds");
                 }
-                return area[row * Rows + col];
+
+                try
+                {
+                    return area[Cols * row + col];
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e);
+                    throw;
+                }
+                
 
                 
             }
             set
             {
-                if (row * Rows + col >= area.Length || row * Rows + col < 0)
+                if (row * Cols + col >= area.Length || row * Cols + col < 0)
                 {
                     throw new IndexOutOfRangeException("Out Of Bounds");
                 }
 
-                area[row * Rows + col] = value;
+                area[Cols * row + col] = value;
             }
             
         }

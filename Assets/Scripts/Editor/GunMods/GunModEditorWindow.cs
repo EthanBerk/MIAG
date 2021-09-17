@@ -9,18 +9,25 @@ namespace Editor.GunMods
 {
     public class GunModEditorWindow : EditorWindow
     {
+        private Texture2D _workTexture2D;
         [MenuItem("Window/GunModEditor")]
         private static void ShowWindow()
         {
             var window = GetWindow<GunModEditorWindow>();
             window.titleContent = new GUIContent("Gun Mod Editor");
             window.Show();
+            
         }
-        
+
+        private void OnEnable()
+        {
+            
+        }
+
 
         private GunMod _gunMod;
         private Sprite _sprite;
-        private Texture2D _workTexture2D;
+        
         private Color[] _spriteColors;
 
         private void OnGUI()
@@ -33,14 +40,19 @@ namespace Editor.GunMods
                 var texture = Instantiate(_sprite.texture);
                 var spriteTexture = Sprite.Create(texture, _sprite.textureRect, Vector2.zero, 16).texture;
                 _spriteColors = spriteTexture.GetPixels(0,0, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height);
-                _workTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2);
+                _workTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2)
+                {
+                    filterMode = FilterMode.Point
+                };
+
             }
             if (_gunMod is null) return;
             
-            EditorUtils.clear(ref _workTexture2D);
-            _workTexture2D.SetPixels(1,1, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height, _spriteColors);
+            //EditorUtils.clear(ref _workTexture2D);
+            //_workTexture2D.SetPixels(1,1, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height, _spriteColors);
+            _workTexture2D.SetPixels(updatePixels(_gunMod.attachmentArea, ref _workTexture2D, Color.red));
             _workTexture2D.Apply();
-            updatePixels(_gunMod.attachmentArea, ref _workTexture2D, Color.red);
+            
 
             var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandWidth(true),
                 GUILayout.ExpandHeight(true));
@@ -59,26 +71,20 @@ namespace Editor.GunMods
             }
         }
 
-        private void updatePixels(Serializable2DArray<bool> states, ref Texture2D texture2D, Color color)
+        private Color[] updatePixels(Serializable2DArray<bool> states, ref Texture2D texture2D, Color color)
         {
-            for (var col = 0; col < states.Cols; col++)
+            var colors = new Color[texture2D.height * texture2D.width];
+            for (var acc = 0; acc < _gunMod.attachmentArea.area.Length; acc++)
             {
-                for (var row = 0; row < states.Rows; row++)
-                {
-                    try
-                    {
-                        if(states[row - 1, col -1])texture2D.SetPixel(col, row, color);
-
-                    }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e);
-                        throw;
-                    }
-                    
-                }
+                var isColor = _gunMod.attachmentArea.area[acc];
+                if (isColor)
+                    colors[acc] = color;
+                else
+                    colors[acc] = Color.clear;
             }
-            texture2D.Apply();
+
+            return colors;
         }
+        
     }
 }

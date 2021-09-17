@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: GunMod
   m_EditorClassIdentifier: 
   GunModController: {fileID: 0}
-  LargeSprite: {fileID: -7072977092328738873, guid: 72a1805abc5e3e34abc4e4bb8c8c7be1,
-    type: 3}
+  LargeSprite: {fileID: 0}
   SmallSprite: {fileID: 0}
   StatEffects: []
   gunModType: 0

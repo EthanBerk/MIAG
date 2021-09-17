@@ -10,7 +10,7 @@ namespace Utils
             for (var acc = 0; acc < fillColorArray.Length; acc++)
                 fillColorArray[acc] = Color.clear;
             texture2D.SetPixels(fillColorArray);
-            texture2D.Apply();
+            
             
         }
     }
