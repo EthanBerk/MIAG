@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Timers;
 using GunMods;
 using Objects;
+using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
 using Utils;
@@ -9,7 +12,7 @@ namespace Editor.GunMods
 {
     public class GunModEditorWindow : EditorWindow
     {
-        private Texture2D _workTexture2D;
+        
         [MenuItem("Window/GunModEditor")]
         private static void ShowWindow()
         {
@@ -19,19 +22,22 @@ namespace Editor.GunMods
             
         }
 
-        private void OnEnable()
-        {
-            
-        }
-
-
         private GunMod _gunMod;
         private Sprite _sprite;
-        
         private Color[] _spriteColors;
-
+        private Texture2D _workTexture2D, _originalTexture2D;
+        private int _toolBar;
+        private Color _currentColor;
+        private Vector2 _startPoint;
+        private int _requiredLength = 2;
+        private GunModAttachmentLine _largeModAttachmentLine;
+        
+        
+        
+        
         private void OnGUI()
         {
+            
             EditorGUI.BeginChangeCheck();
             _gunMod = EditorGUILayout.ObjectField(_gunMod, typeof(GunMod), false) as GunMod;
             if (EditorGUI.EndChangeCheck())
@@ -44,47 +50,168 @@ namespace Editor.GunMods
                 {
                     filterMode = FilterMode.Point
                 };
+                EditorUtils.clear(ref _workTexture2D);
+                _workTexture2D.SetPixels(1,1, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height, _spriteColors);
+                _workTexture2D.Apply();
+                _originalTexture2D = Instantiate(_workTexture2D);
+                //UpdatePixels(_gunMod.attachmentArea, ref _workTexture2D, Color.red);
+                _workTexture2D.Apply();
+                Repaint();
+            }
+            
+            if(_gunMod is null) return;
+            var e = Event.current;
+            UpdateColor();
+            
+ 
+            
+ 
+            GUILayout.BeginHorizontal();
+            GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(100));
+             _toolBar = EditorGUILayout.Popup(_toolBar, Enum.GetNames(typeof(GunModType)));
+             
+             _gunMod.gunModType = (GunModType) _toolBar;
+             
+            GUILayout.EndVertical();
+ 
+            
+            var rect = GUILayoutUtility.GetRect(GUIContent.none, "GroupBox", GUILayout.ExpandWidth(true),
+                GUILayout.ExpandHeight(true));
+            GUILayout.EndHorizontal();
+            
+            
+            
+            var smallerDistance = Mathf.FloorToInt((rect.width / _workTexture2D.width < rect.height / _workTexture2D.height)? rect.width / _workTexture2D.width : rect.height / _workTexture2D.height);
+            var texRect = new Rect(rect.position, new Vector2(smallerDistance * _workTexture2D.width, smallerDistance * _workTexture2D.height));
+
+
+            if (Event.current.type == EventType.Repaint)
+            {
+                Graphics.DrawTexture(texRect, _workTexture2D);
+            }
+
+
+
+
+
+            if (e.type == EventType.MouseDown && texRect.Contains(e.mousePosition))
+            {
+                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _workTexture2D.height)));
+                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _workTexture2D.width)));
+                row = ((_workTexture2D.height - 1) - row);
+
+                _startPoint = new Vector2(col, row);
 
             }
-            if (_gunMod is null) return;
-            
-            //EditorUtils.clear(ref _workTexture2D);
-            //_workTexture2D.SetPixels(1,1, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height, _spriteColors);
-            _workTexture2D.SetPixels(updatePixels(_gunMod.attachmentArea, ref _workTexture2D, Color.red));
-            _workTexture2D.Apply();
-            
 
-            var rect = GUILayoutUtility.GetRect(GUIContent.none, GUIStyle.none, GUILayout.ExpandWidth(true),
-                GUILayout.ExpandHeight(true));
-            var smallerDistance = Mathf.FloorToInt((rect.width / _sprite.textureRect.width < rect.height / _sprite.textureRect.height)? rect.width / _sprite.textureRect.width : rect.height / _sprite.textureRect.height);
-            var adjRect = new Rect(rect.position, new Vector2(smallerDistance * _sprite.textureRect.width, smallerDistance * _sprite.textureRect.height));
-            GUI.DrawTexture(adjRect, _workTexture2D);
-            
-            
-            var mouseRect = new Rect(adjRect.x, adjRect.y, adjRect.width + 2 * smallerDistance, adjRect.height + 2 * smallerDistance);
-            var m_Event = Event.current;
-            if (m_Event.type == EventType.MouseDown && mouseRect.Contains(m_Event.mousePosition))
+            if (e.type == EventType.MouseDrag && texRect.Contains(e.mousePosition))
             {
-                var row = Mathf.Abs(Mathf.RoundToInt((adjRect.y - m_Event.mousePosition.y) / smallerDistance));
-                var col = Mathf.Abs(Mathf.RoundToInt((m_Event.mousePosition.x - adjRect.x) / smallerDistance));
-                _gunMod.attachmentArea[row, col] = m_Event.button == 0;
+                
+                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _workTexture2D.height)));
+                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _workTexture2D.width)));
+                row = ((_workTexture2D.height - 1) - row);
+
+
+
+
+                SetPixelsOfLine(_largeModAttachmentLine, ref _workTexture2D, ref _originalTexture2D);
+                var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
+                var length = (int)(up ? row - _startPoint.y : col - _startPoint.x);
+                length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
+                _largeModAttachmentLine = new GunModAttachmentLine(_startPoint, length, up);
+                SetPixelsOfLine(_largeModAttachmentLine, ref _workTexture2D, Color.blue);
+                
+                
+                
+                
+
+                
+                
+                
+                //_workTexture2D.SetPixel(col, row, (e.button == 0? _currentColor : _originalTexture2D.GetPixel(col, row)));
+                
+                _workTexture2D.Apply();
+                Repaint();
+
             }
         }
 
-        private Color[] updatePixels(Serializable2DArray<bool> states, ref Texture2D texture2D, Color color)
+        private void SetPixelsOfLine(GunModAttachmentLine gunModAttachmentLine, ref Texture2D texture2D, Color color)
         {
-            var colors = new Color[texture2D.height * texture2D.width];
-            for (var acc = 0; acc < _gunMod.attachmentArea.area.Length; acc++)
+            var rect = gunModAttachmentLine.Rect;
+            texture2D.SetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height, PopulateColors(gunModAttachmentLine.Length, color));
+        }
+        private void SetPixelsOfLine(GunModAttachmentLine gunModAttachmentLine, ref Texture2D texture2D, ref Texture2D originalTexture)
+        {
+            var rect = gunModAttachmentLine.Rect;
+            Color[] pixels;
+            try
             {
-                var isColor = _gunMod.attachmentArea.area[acc];
-                if (isColor)
-                    colors[acc] = color;
-                else
-                    colors[acc] = Color.clear;
+                pixels = _originalTexture2D.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
             }
+            catch (Exception e)
+            {
+                Console.WriteLine(e);
+                throw;
+            }
+            texture2D.SetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height, pixels);
+        }
 
+
+        
+
+        
+        
+
+        private static void UpdatePixels(Serializable2DArray<bool> states, ref Texture2D texture2D, Color color)
+        {
+            for (var col = 0; col < states.Cols; col++)
+            {
+                for (var row = 0; row < states.Rows; row++)
+                {
+                    try
+                    {
+                        if (states[row, col]) texture2D.SetPixel(col, row, color);
+
+                    }
+                    catch (Exception e)
+                    {
+                        Console.WriteLine(e);
+                        throw;
+                    }
+
+                }
+            }
+        }
+
+        private void UpdateColor()
+        {
+            switch (_gunMod.gunModType)
+            {
+                case GunModType.Base:
+                    _currentColor = Color.blue;
+                    break;
+                case GunModType.Stock:
+                    _currentColor = Color.red;
+                    break;
+                case GunModType.Barrel:
+                    _currentColor = Color.yellow;
+                    break;
+                case GunModType.Mod:
+                    _currentColor = Color.green;
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
+        }
+
+        private Color[] PopulateColors(int length, Color color)
+        {
+            var colors = new Color[length];
+            for (var i = 0; i < length; ++i)
+                colors[i] = color;
             return colors;
         }
-        
+
     }
 }

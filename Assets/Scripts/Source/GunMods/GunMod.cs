@@ -18,7 +18,10 @@ namespace GunMods
 
         [SerializeField] public List<StatEffect> StatEffects;
         
-        [SerializeField] public Serializable2DArray<bool> attachmentArea;
+        
+        
+        [SerializeField] public List<GunModAttachmentRail> attachmentArea = new List<GunModAttachmentRail>();
+        
         
         
 
