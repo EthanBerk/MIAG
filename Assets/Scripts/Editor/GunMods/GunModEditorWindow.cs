@@ -23,14 +23,14 @@ namespace Editor.GunMods
         }
 
         private GunMod _gunMod;
-        private Sprite _sprite;
-        private Color[] _spriteColors;
-        private Texture2D _workTexture2D, _originalTexture2D;
+        private Sprite _largeSprite, _smallSprite;
+        private Texture2D _largeWorkTexture2D, _largeOriginalTexture2D, _smallWorkTexture2D, _smallOriginalTexture2D;
         private int _toolBar;
         private Color _currentColor;
         private Vector2 _startPoint;
-        private int _requiredLength = 2;
+        
         private GunModAttachmentLine _largeModAttachmentLine;
+        private int _requiredLength = 2;
         
         
         
@@ -42,20 +42,27 @@ namespace Editor.GunMods
             _gunMod = EditorGUILayout.ObjectField(_gunMod, typeof(GunMod), false) as GunMod;
             if (EditorGUI.EndChangeCheck())
             {
-                _sprite = _gunMod.LargeSprite;
-                var texture = Instantiate(_sprite.texture);
-                var spriteTexture = Sprite.Create(texture, _sprite.textureRect, Vector2.zero, 16).texture;
-                _spriteColors = spriteTexture.GetPixels(0,0, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height);
-                _workTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2)
-                {
-                    filterMode = FilterMode.Point
-                };
-                EditorUtils.clear(ref _workTexture2D);
-                _workTexture2D.SetPixels(1,1, (int)_sprite.textureRect.width, (int)_sprite.textureRect.height, _spriteColors);
-                _workTexture2D.Apply();
-                _originalTexture2D = Instantiate(_workTexture2D);
-                //UpdatePixels(_gunMod.attachmentArea, ref _workTexture2D, Color.red);
-                _workTexture2D.Apply();
+                _largeSprite = _gunMod.LargeSprite;
+                var texture = Instantiate(_largeSprite.texture);
+                var spriteTexture = Sprite.Create(texture, _largeSprite.textureRect, Vector2.zero, 16).texture;
+                var spriteColors = spriteTexture.GetPixels(0,0, (int)_largeSprite.textureRect.width, (int)_largeSprite.textureRect.height);
+                _largeWorkTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2) {filterMode = FilterMode.Point};
+                EditorUtils.clear(ref _largeWorkTexture2D);
+                _largeWorkTexture2D.SetPixels(1,1, (int)_largeSprite.textureRect.width, (int)_largeSprite.textureRect.height, spriteColors);
+                _largeWorkTexture2D.Apply();
+                _largeOriginalTexture2D = Instantiate(_largeWorkTexture2D);
+                _largeWorkTexture2D.Apply();
+                
+                _smallSprite = _gunMod.SmallSprite;
+                texture = Instantiate(_smallSprite.texture);
+                spriteTexture = Sprite.Create(texture, _smallSprite.textureRect, Vector2.zero, 16).texture;
+                spriteColors = spriteTexture.GetPixels(0,0, (int)_smallSprite.textureRect.width, (int)_smallSprite.textureRect.height);
+                _smallWorkTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2) {filterMode = FilterMode.Point};
+                EditorUtils.clear(ref _smallWorkTexture2D);
+                _smallWorkTexture2D.SetPixels(1,1, (int)_smallSprite.textureRect.width, (int)_smallSprite.textureRect.height, spriteColors);
+                _smallWorkTexture2D.Apply();
+                _smallOriginalTexture2D = Instantiate(_smallWorkTexture2D);
+                _smallWorkTexture2D.Apply();
                 Repaint();
             }
             
@@ -81,13 +88,13 @@ namespace Editor.GunMods
             
             
             
-            var smallerDistance = Mathf.FloorToInt((rect.width / _workTexture2D.width < rect.height / _workTexture2D.height)? rect.width / _workTexture2D.width : rect.height / _workTexture2D.height);
-            var texRect = new Rect(rect.position, new Vector2(smallerDistance * _workTexture2D.width, smallerDistance * _workTexture2D.height));
+            var smallerDistance = Mathf.FloorToInt((rect.width / _largeWorkTexture2D.width < rect.height / _largeWorkTexture2D.height)? rect.width / _largeWorkTexture2D.width : rect.height / _largeWorkTexture2D.height);
+            var texRect = new Rect(rect.position, new Vector2(smallerDistance * _largeWorkTexture2D.width, smallerDistance * _largeWorkTexture2D.height));
 
 
             if (Event.current.type == EventType.Repaint)
             {
-                Graphics.DrawTexture(texRect, _workTexture2D);
+                Graphics.DrawTexture(texRect, _largeWorkTexture2D);
             }
 
 
@@ -96,9 +103,9 @@ namespace Editor.GunMods
 
             if (e.type == EventType.MouseDown && texRect.Contains(e.mousePosition))
             {
-                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _workTexture2D.height)));
-                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _workTexture2D.width)));
-                row = ((_workTexture2D.height - 1) - row);
+                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
+                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
+                row = ((_largeWorkTexture2D.height - 1) - row);
 
                 _startPoint = new Vector2(col, row);
 
@@ -107,19 +114,20 @@ namespace Editor.GunMods
             if (e.type == EventType.MouseDrag && texRect.Contains(e.mousePosition))
             {
                 
-                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _workTexture2D.height)));
-                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _workTexture2D.width)));
-                row = ((_workTexture2D.height - 1) - row);
+                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
+                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
+                row = ((_largeWorkTexture2D.height - 1) - row);
 
 
 
 
-                SetPixelsOfLine(_largeModAttachmentLine, ref _workTexture2D, ref _originalTexture2D);
+                if(_largeModAttachmentLine is {})
+                    SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, ref _largeOriginalTexture2D);
                 var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
                 var length = (int)(up ? row - _startPoint.y : col - _startPoint.x);
                 length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
                 _largeModAttachmentLine = new GunModAttachmentLine(_startPoint, length, up);
-                SetPixelsOfLine(_largeModAttachmentLine, ref _workTexture2D, Color.blue);
+                SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, Color.blue);
                 
                 
                 
@@ -130,7 +138,7 @@ namespace Editor.GunMods
                 
                 //_workTexture2D.SetPixel(col, row, (e.button == 0? _currentColor : _originalTexture2D.GetPixel(col, row)));
                 
-                _workTexture2D.Apply();
+                _largeWorkTexture2D.Apply();
                 Repaint();
 
             }
@@ -147,7 +155,7 @@ namespace Editor.GunMods
             Color[] pixels;
             try
             {
-                pixels = _originalTexture2D.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
+                pixels = _largeOriginalTexture2D.GetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height);
             }
             catch (Exception e)
             {
@@ -207,8 +215,8 @@ namespace Editor.GunMods
 
         private Color[] PopulateColors(int length, Color color)
         {
-            var colors = new Color[length];
-            for (var i = 0; i < length; ++i)
+            var colors = new Color[Math.Abs(length)];
+            for (var i = 0; i < Math.Abs(length); ++i)
                 colors[i] = color;
             return colors;
         }
