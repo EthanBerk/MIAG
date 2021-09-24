@@ -22,9 +22,9 @@ namespace GunMods
             Up = up;
             var pos = Math.Sign(length) == 1;
             if (up)
-                Rect = new Rect(start.x, pos? start.y + length: start.y, 1, Math.Abs(length));
+                Rect = new Rect(start.x, pos? start.y: start.y + Length, 1, Math.Abs(length));
             else
-                Rect = new Rect(!pos? start.x - length: start.x, start.y, Math.Abs(length), 1);
+                Rect = new Rect(!pos? start.x + length: start.x, start.y, Math.Abs(length), 1);
         }
         
     }
