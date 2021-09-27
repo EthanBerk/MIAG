@@ -58,7 +58,7 @@ namespace Editor.GunMods
             EditorGUILayout.PropertyField(sprite);
             if (EditorGUI.EndChangeCheck())
             {
-                ((GunMod) target).attachmentArea = new Serializable2DArray<bool>(Mathf.RoundToInt(((Sprite) sprite.objectReferenceValue).textureRect.width + 2), Mathf.RoundToInt(((Sprite) sprite.objectReferenceValue).textureRect.height + 2));
+                //((GunMod) target).attachmentArea = new Serializable2DArray<bool>(Mathf.RoundToInt(((Sprite) sprite.objectReferenceValue).textureRect.width + 2), Mathf.RoundToInt(((Sprite) sprite.objectReferenceValue).textureRect.height + 2));
             }
 
             serializedObject.ApplyModifiedProperties();
