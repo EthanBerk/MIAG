@@ -22,7 +22,7 @@ namespace Editor.GunMods
             
         }
 
-        private GunMod _gunMod;
+        public GunMod GunMod { get; set; }
         private Sprite _largeSprite, _smallSprite;
         private Texture2D _largeWorkTexture2D, _largeOriginalTexture2D, _smallWorkTexture2D, _smallOriginalTexture2D;
         private int _toolBar;
@@ -31,117 +31,143 @@ namespace Editor.GunMods
         
         private GunModAttachmentLine _largeModAttachmentLine;
         private int _requiredLength = 2;
+        private bool _hasInitialized = false;
+
+        private List<GunModAttachmentRail> AttachmentRails = new List<GunModAttachmentRail>();
+
         
         
-        
-        
+
+
         private void OnGUI()
         {
-            
-            EditorGUI.BeginChangeCheck();
-            _gunMod = EditorGUILayout.ObjectField(_gunMod, typeof(GunMod), false) as GunMod;
-            if (EditorGUI.EndChangeCheck())
+            if(GunMod is null) return;
+            if (!_hasInitialized)
             {
-                _largeSprite = _gunMod.LargeSprite;
+                _largeSprite = GunMod.LargeSprite;
                 var texture = Instantiate(_largeSprite.texture);
-                var spriteTexture = Sprite.Create(texture, _largeSprite.textureRect, Vector2.zero, 16).texture;
-                var spriteColors = spriteTexture.GetPixels(0,0, (int)_largeSprite.textureRect.width, (int)_largeSprite.textureRect.height);
-                _largeWorkTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2) {filterMode = FilterMode.Point};
+                
+                
+                var spriteTexture = Sprite.Create(texture, _largeSprite.rect, Vector2.zero, 16).texture;
+                var spriteColors = spriteTexture.GetPixels((int)_largeSprite.rect.x, (int)_largeSprite.rect.y, (int)_largeSprite.rect.width, (int)_largeSprite.rect.height);
+                _largeWorkTexture2D = new Texture2D((int)_largeSprite.rect.width + 2, (int)_largeSprite.rect.height + 2) {filterMode = FilterMode.Point};
                 EditorUtils.clear(ref _largeWorkTexture2D);
-                _largeWorkTexture2D.SetPixels(1,1, (int)_largeSprite.textureRect.width, (int)_largeSprite.textureRect.height, spriteColors);
+                _largeWorkTexture2D.SetPixels(1,1, (int)_largeSprite.rect.width, (int)_largeSprite.rect.height, spriteColors);
                 _largeWorkTexture2D.Apply();
                 _largeOriginalTexture2D = Instantiate(_largeWorkTexture2D);
-                _largeWorkTexture2D.Apply();
                 
-                _smallSprite = _gunMod.SmallSprite;
-                texture = Instantiate(_smallSprite.texture);
-                spriteTexture = Sprite.Create(texture, _smallSprite.textureRect, Vector2.zero, 16).texture;
-                spriteColors = spriteTexture.GetPixels(0,0, (int)_smallSprite.textureRect.width, (int)_smallSprite.textureRect.height);
-                _smallWorkTexture2D = new Texture2D(spriteTexture.width + 2, spriteTexture.height + 2) {filterMode = FilterMode.Point};
+                
+                
+                _smallSprite = GunMod.SmallSprite;
+                
+                spriteTexture = Sprite.Create(texture, _smallSprite.rect, Vector2.zero, 16).texture;
+                spriteColors = spriteTexture.GetPixels((int)_smallSprite.rect.x, (int)_smallSprite.rect.y, (int)_smallSprite.rect.width, (int)_smallSprite.rect.height);
+                _smallWorkTexture2D = new Texture2D((int)_smallSprite.rect.width + 2, (int)_smallSprite.rect.height + 2) {filterMode = FilterMode.Point};
                 EditorUtils.clear(ref _smallWorkTexture2D);
-                _smallWorkTexture2D.SetPixels(1,1, (int)_smallSprite.textureRect.width, (int)_smallSprite.textureRect.height, spriteColors);
+                _smallWorkTexture2D.SetPixels(1,1, (int)_smallSprite.rect.width, (int)_smallSprite.rect.height, spriteColors);
                 _smallWorkTexture2D.Apply();
                 _smallOriginalTexture2D = Instantiate(_smallWorkTexture2D);
-                _smallWorkTexture2D.Apply();
+                
                 Repaint();
+                _hasInitialized = true;
             }
             
-            if(_gunMod is null) return;
+            
             var e = Event.current;
             UpdateColor();
             
- 
             
- 
             GUILayout.BeginHorizontal();
-            GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(100));
+            GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(150));
              _toolBar = EditorGUILayout.Popup(_toolBar, Enum.GetNames(typeof(GunModType)));
+             GunMod.gunModType = (GunModType) _toolBar;
+             GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(120));
              
-             _gunMod.gunModType = (GunModType) _toolBar;
+             int acc = 0;
+             foreach (var rail in AttachmentRails)
+             {
+                 GUILayout.BeginHorizontal();
+                 ++acc;
+                 GUILayout.Label($"Rail :{acc}");
+                 GUILayout.EndHorizontal();
+             }
+
+             GUILayout.EndVertical();
+             if (GUILayout.Button("Add"))
+             {
+                 AttachmentRails.Add(new GunModAttachmentRail());
+             }
              
             GUILayout.EndVertical();
  
-            
-            var rect = GUILayoutUtility.GetRect(GUIContent.none, "GroupBox", GUILayout.ExpandWidth(true),
+            var spriteRect  = GUILayoutUtility.GetRect(GUIContent.none, "GroupBox", GUILayout.ExpandWidth(true),
                 GUILayout.ExpandHeight(true));
+            
             GUILayout.EndHorizontal();
             
             
-            
-            var smallerDistance = Mathf.FloorToInt((rect.width / _largeWorkTexture2D.width < rect.height / _largeWorkTexture2D.height)? rect.width / _largeWorkTexture2D.width : rect.height / _largeWorkTexture2D.height);
-            var texRect = new Rect(rect.position, new Vector2(smallerDistance * _largeWorkTexture2D.width, smallerDistance * _largeWorkTexture2D.height));
 
+            var smallSpriteRect = new Rect(spriteRect.x, spriteRect.y + spriteRect.height / 2, spriteRect.width,
+                spriteRect.height/2);
+            var smallSpriteScale = Mathf.FloorToInt((smallSpriteRect.width / _smallWorkTexture2D.width < smallSpriteRect.height / _smallWorkTexture2D.height)? smallSpriteRect.width / _smallWorkTexture2D.width : smallSpriteRect.height / _smallWorkTexture2D.height);
+            var smallSpriteTexRect = new Rect(smallSpriteRect.position, new Vector2(smallSpriteScale * _smallWorkTexture2D.width, smallSpriteScale * _smallWorkTexture2D.height));
+
+            var largeSpriteRect = new Rect(spriteRect.x, spriteRect.y, spriteRect.width,
+                     spriteRect.height/2);
+            var largeSpriteScale = Mathf.FloorToInt((largeSpriteRect.width / _largeWorkTexture2D.width < largeSpriteRect.height / _largeWorkTexture2D.height)? largeSpriteRect.width / _largeWorkTexture2D.width : largeSpriteRect.height / _largeWorkTexture2D.height);
+            var largeSpriteTexRect = new Rect(largeSpriteRect.position, new Vector2(largeSpriteScale * _largeWorkTexture2D.width, largeSpriteScale * _largeWorkTexture2D.height));
 
             if (Event.current.type == EventType.Repaint)
             {
-                Graphics.DrawTexture(texRect, _largeWorkTexture2D);
+                Graphics.DrawTexture(largeSpriteTexRect, _largeWorkTexture2D);
+                Graphics.DrawTexture(smallSpriteTexRect, _smallWorkTexture2D);
             }
 
 
 
 
 
-            if (e.type == EventType.MouseDown && texRect.Contains(e.mousePosition))
-            {
-                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
-                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
-                row = ((_largeWorkTexture2D.height - 1) - row);
-
-                _startPoint = new Vector2(col, row);
-
-            }
-
-            if (e.type == EventType.MouseDrag && texRect.Contains(e.mousePosition))
-            {
-                
-                var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
-                var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
-                row = ((_largeWorkTexture2D.height - 1) - row);
-
-
-
-
-                if(_largeModAttachmentLine is {})
-                    SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, ref _largeOriginalTexture2D);
-                var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
-                var length = (int)(up ? row - _startPoint.y : col - _startPoint.x);
-                length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
-                _largeModAttachmentLine = new GunModAttachmentLine(_startPoint, length, up);
-                SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, Color.blue);
-                
-                
-                
-                
-
-                
-                
-                
-                //_workTexture2D.SetPixel(col, row, (e.button == 0? _currentColor : _originalTexture2D.GetPixel(col, row)));
-                
-                _largeWorkTexture2D.Apply();
-                Repaint();
-
-            }
+            // if (e.type == EventType.MouseDown && texRect.Contains(e.mousePosition))
+            // {
+            //     var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
+            //     var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
+            //     row = ((_largeWorkTexture2D.height - 1) - row);
+            //
+            //     _startPoint = new Vector2(col, row);
+            //
+            // }
+            //
+            // if (e.type == EventType.MouseDrag && texRect.Contains(e.mousePosition))
+            // {
+            //     
+            //     var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
+            //     var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
+            //     row = ((_largeWorkTexture2D.height - 1) - row);
+            //
+            //
+            //
+            //
+            //     if(_largeModAttachmentLine is {})
+            //         SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, ref _largeOriginalTexture2D);
+            //     var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
+            //     var length = (int)(up ? row - _startPoint.y : col - _startPoint.x);
+            //     length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
+            //     _largeModAttachmentLine = new GunModAttachmentLine(_startPoint, length, up);
+            //     SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, Color.blue);
+            //     
+            //     
+            //     
+            //     
+            //
+            //     
+            //     
+            //     
+            //     //_workTexture2D.SetPixel(col, row, (e.button == 0? _currentColor : _originalTexture2D.GetPixel(col, row)));
+            //     
+            //     _largeWorkTexture2D.Apply();
+            //     Repaint();
+            //
+            // }
         }
 
         private void SetPixelsOfLine(GunModAttachmentLine gunModAttachmentLine, ref Texture2D texture2D, Color color)
@@ -194,7 +220,7 @@ namespace Editor.GunMods
 
         private void UpdateColor()
         {
-            switch (_gunMod.gunModType)
+            switch (GunMod.gunModType)
             {
                 case GunModType.Base:
                     _currentColor = Color.blue;

@@ -11,7 +11,7 @@ ScriptedImporter:
   importOptions:
     scale: 1
     splitLayers: 0
-    splitSlices: 0
+    splitSlices: 1
     fileNameFormat: '{title}_{tag}_frame{tagframe1}'
     ditheringAlgorithmType: 0
     ditheringMatrixType: 0
@@ -31,16 +31,33 @@ ScriptedImporter:
     exportDirectory: Sprites/{filename}
   animationOptions: []
   sheetData:
-    frames: []
+    frames:
+    - filename: AK47Core__frame1
+      frame:
+        x: 0
+        y: 0
+        w: 128
+        h: 128
+      rotated: 0
+      trimmed: 0
+      spriteSourceSize:
+        x: 0
+        y: 0
+        w: 128
+        h: 128
+      sourceSize:
+        w: 128
+        h: 128
+      duration: 100
     meta:
-      version: 
-      image: 
-      format: 
+      version: 1.2.25-x64
+      image: AK47Core_sheet.png
+      format: RGBA8888
       size:
-        w: 0
-        h: 0
-      scale: 0
+        w: 128
+        h: 128
+      scale: 1
       frameTags: []
       slices: []
-    pathToSheetData: 
-    aseFileName: 
+    pathToSheetData: Temp/UnityTempFile-d175442012b79f840bc0d6f1f8f65b6f/asetempexports/AK47Core_data.json
+    aseFileName: Assets/Objects/Guns/Cyberpunk/AK47/AK47Core/AK47Core.aseprite

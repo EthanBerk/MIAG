@@ -34,6 +34,9 @@ namespace GunMods
     {
         public GunModAttachmentLine largeSpriteLine, smallSpriteLine;
 
+        public GunModAttachmentRail()
+        { }
+
         public GunModAttachmentRail(GunModAttachmentLine largeSpriteLine, GunModAttachmentLine smallSpriteLine)
         {
             this.largeSpriteLine = largeSpriteLine;

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Attributes;
 using Objects;
 using UnityEngine;
@@ -10,12 +11,14 @@ namespace GunMods
     public class GunMod : ScriptableObject
     {
         [Expandable]
-        public GunModController GunModController;
+        public GunModController gunModController;
         
-        [HideInInspector] public Sprite LargeSprite;
+         public Sprite LargeSprite;
 
-        [SerializeField] public Sprite SmallSprite;
+         public Sprite SmallSprite;
+         [HideInInspector]public List<Sprite> sprites;
 
+        
         [SerializeField] public List<StatEffect> StatEffects;
         
         
@@ -31,7 +34,7 @@ namespace GunMods
 
         public void SetGunModController(GunModController gunModController)
         {
-            GunModController = gunModController;
+            this.gunModController = gunModController;
         }
 
     }
