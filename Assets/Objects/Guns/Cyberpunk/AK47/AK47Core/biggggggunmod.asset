@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f211ce5762364e61910105f0be6d64a9, type: 3}
-  m_Name: GunMod 1
+  m_Name: biggggggunmod
   m_EditorClassIdentifier: 
   gunModController: {fileID: 0}
   LargeSprite: {fileID: 3442132915880979596, guid: e80b05247dba713488df12900b021c16,

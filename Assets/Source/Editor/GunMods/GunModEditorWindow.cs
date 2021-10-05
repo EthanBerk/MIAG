@@ -28,10 +28,14 @@ namespace Editor.GunMods
         private int _toolBar;
         private Color _currentColor;
         private Vector2 _startPoint;
+
+        private Vector2 scrollPos;
         
-        private GunModAttachmentLine _largeModAttachmentLine;
+        
         private int _requiredLength = 2;
         private bool _hasInitialized = false;
+        private GunModAttachmentRail _currentAttachmentRail = new GunModAttachmentRail();
+        private GunModAttachmentRail _tempCurrentAttachmentRail= new GunModAttachmentRail();
 
         private List<GunModAttachmentRail> AttachmentRails = new List<GunModAttachmentRail>();
 
@@ -81,16 +85,43 @@ namespace Editor.GunMods
             GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(150));
              _toolBar = EditorGUILayout.Popup(_toolBar, Enum.GetNames(typeof(GunModType)));
              GunMod.gunModType = (GunModType) _toolBar;
-             GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(120));
+             GUILayout.BeginVertical("GroupBox", GUILayout.ExpandHeight(true), GUILayout.Width(150));
+             scrollPos =
+                 GUILayout.BeginScrollView(scrollPos);
              
              int acc = 0;
-             foreach (var rail in AttachmentRails)
+             for (var i = 0; i < AttachmentRails.Count; i++)
              {
+                 var rail = AttachmentRails[i];
                  GUILayout.BeginHorizontal();
                  ++acc;
-                 GUILayout.Label($"Rail :{acc}");
+                 var gunType = (int) GunMod.gunModType - 1;
+                 gunType = EditorGUILayout.Popup(gunType, Enum.GetNames(typeof(GunAttachmentType)));
+                 rail.AttachmentType = (GunAttachmentType) gunType;
+                 if (GUILayout.Button("Edit"))
+                 {
+                     if (_currentAttachmentRail.IsEmpty && AttachmentRails.Contains(_currentAttachmentRail))
+                         AttachmentRails.Remove(_currentAttachmentRail);
+                     
+                     
+                     
+                     _currentAttachmentRail = rail;
+                     if (rail.IsEmpty)
+                         _tempCurrentAttachmentRail = new GunModAttachmentRail();
+                     else
+                         _tempCurrentAttachmentRail = new GunModAttachmentRail(rail.LargeSpriteLine,
+                             rail.SmallSpriteLine, rail.AttachmentType);
+                 }
+                 if (GUILayout.Button("-"))
+                 {
+                     AttachmentRails.Remove(rail);
+                     i--;
+                 }
+
                  GUILayout.EndHorizontal();
              }
+
+             GUILayout.EndScrollView();
 
              GUILayout.EndVertical();
              if (GUILayout.Button("Add"))
@@ -189,6 +220,15 @@ namespace Editor.GunMods
                 throw;
             }
             texture2D.SetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height, pixels);
+        }
+
+        private void SetPixelsOfRail(GunModAttachmentRail gunModAttachmentRail, ref Texture2D texture2D, Color color)
+        {
+            //TODO
+        }
+        private void SetPixelsOfRail(GunModAttachmentRail gunModAttachmentRail, ref Texture2D texture2D, ref Texture2D originalTexture)
+        {
+            //TODO
         }
 
 

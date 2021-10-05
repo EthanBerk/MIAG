@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Dynamic;
 using UnityEngine;
 
 
@@ -32,16 +33,32 @@ namespace GunMods
     [Serializable]
     public class GunModAttachmentRail
     {
-        public GunModAttachmentLine largeSpriteLine, smallSpriteLine;
+        public GunModAttachmentLine LargeSpriteLine { get; set; }
+        public bool IsEmpty { get; set; }
+        public GunModAttachmentLine SmallSpriteLine { get; set; }
+
+        public GunAttachmentType AttachmentType { get; set; } = GunAttachmentType.Barrel;
 
         public GunModAttachmentRail()
-        { }
-
-        public GunModAttachmentRail(GunModAttachmentLine largeSpriteLine, GunModAttachmentLine smallSpriteLine)
         {
-            this.largeSpriteLine = largeSpriteLine;
-            this.smallSpriteLine = smallSpriteLine;
+            IsEmpty = true; 
+        }
+
+        public GunModAttachmentRail(GunModAttachmentLine largeSpriteLine, GunModAttachmentLine smallSpriteLine, GunAttachmentType attachmentType)
+        {
+            LargeSpriteLine = largeSpriteLine;
+            SmallSpriteLine = smallSpriteLine;
+            AttachmentType = attachmentType;
+            IsEmpty = false;
         }
     }
     
+    [Serializable]
+    public enum GunAttachmentType{
+        Barrel,
+        Scope,
+        Stock
+    }
+    
+
 }
