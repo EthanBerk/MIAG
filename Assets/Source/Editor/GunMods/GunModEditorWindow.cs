@@ -103,14 +103,16 @@ namespace Editor.GunMods
                      if (_currentAttachmentRail.IsEmpty && AttachmentRails.Contains(_currentAttachmentRail))
                          AttachmentRails.Remove(_currentAttachmentRail);
                      
-                     
-                     
+                     ResetPixelsOfRail(_currentAttachmentRail);
                      _currentAttachmentRail = rail;
+                     SetPixelsOfRail(_currentAttachmentRail, GetColorFromAttachmentType(rail.AttachmentType));
+                     Repaint();
                      if (rail.IsEmpty)
                          _tempCurrentAttachmentRail = new GunModAttachmentRail();
                      else
                          _tempCurrentAttachmentRail = new GunModAttachmentRail(rail.LargeSpriteLine,
                              rail.SmallSpriteLine, rail.AttachmentType);
+                     
                  }
                  if (GUILayout.Button("-"))
                  {
@@ -158,47 +160,51 @@ namespace Editor.GunMods
 
 
 
-            // if (e.type == EventType.MouseDown && texRect.Contains(e.mousePosition))
-            // {
-            //     var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
-            //     var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
-            //     row = ((_largeWorkTexture2D.height - 1) - row);
-            //
-            //     _startPoint = new Vector2(col, row);
-            //
-            // }
-            //
-            // if (e.type == EventType.MouseDrag && texRect.Contains(e.mousePosition))
-            // {
-            //     
-            //     var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - texRect.yMin) / (texRect.height / _largeWorkTexture2D.height)));
-            //     var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - texRect.x) / (texRect.width / _largeWorkTexture2D.width)));
-            //     row = ((_largeWorkTexture2D.height - 1) - row);
-            //
-            //
-            //
-            //
-            //     if(_largeModAttachmentLine is {})
-            //         SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, ref _largeOriginalTexture2D);
-            //     var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
-            //     var length = (int)(up ? row - _startPoint.y : col - _startPoint.x);
-            //     length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
-            //     _largeModAttachmentLine = new GunModAttachmentLine(_startPoint, length, up);
-            //     SetPixelsOfLine(_largeModAttachmentLine, ref _largeWorkTexture2D, Color.blue);
-            //     
-            //     
-            //     
-            //     
-            //
-            //     
-            //     
-            //     
-            //     //_workTexture2D.SetPixel(col, row, (e.button == 0? _currentColor : _originalTexture2D.GetPixel(col, row)));
-            //     
-            //     _largeWorkTexture2D.Apply();
-            //     Repaint();
-            //
-            // }
+            switch (e.type)
+            {
+                case EventType.MouseDown when (largeSpriteTexRect.Contains(e.mousePosition) || smallSpriteTexRect.Contains(e.mousePosition)):
+                {
+                    var currentRect = largeSpriteTexRect.Contains(e.mousePosition) ? largeSpriteRect : smallSpriteRect;
+                    var currentTex = largeSpriteTexRect.Contains(e.mousePosition)
+                        ? _largeWorkTexture2D
+                        : _smallWorkTexture2D;
+                    var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - currentRect.yMin) / (currentRect.height / currentTex.height)));
+                    var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - currentRect.x) / (currentRect.width / currentTex.width)));
+                    row = ((currentTex.height - 1) - row);
+                    _startPoint = new Vector2(col, row);
+                    break;
+                }
+                case EventType.MouseDrag when (largeSpriteTexRect.Contains(e.mousePosition) || smallSpriteTexRect.Contains(e.mousePosition)):
+                {
+                    var currentRect = largeSpriteTexRect.Contains(e.mousePosition) ? largeSpriteRect : smallSpriteRect;
+                    var currentTex = largeSpriteTexRect.Contains(e.mousePosition)
+                        ? _largeWorkTexture2D
+                        : _smallWorkTexture2D;
+                    var currentOriginalTex = largeSpriteTexRect.Contains(e.mousePosition)
+                        ? _largeOriginalTexture2D
+                        : _smallOriginalTexture2D;
+                    var row = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.y - currentRect.yMin) / (currentRect.height / currentTex.height)));
+                    var col = Mathf.Abs(Mathf.FloorToInt((e.mousePosition.x - currentRect.x) / (currentRect.width / currentTex.width)));
+                    row = ((currentTex.height - 1) - row);
+
+
+
+                    var currentLine = largeSpriteTexRect.Contains(e.mousePosition)
+                        ? _tempCurrentAttachmentRail.LargeSpriteLine
+                        : _tempCurrentAttachmentRail.SmallSpriteLine;
+            
+                    if(currentLine is {})
+                        SetPixelsOfLine(currentLine, ref currentTex, ref currentOriginalTex);
+                    var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
+                    var length = (int)(up ? row - _startPoint.y : col - _startPoint.x);
+                    length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
+                    currentLine = new GunModAttachmentLine(_startPoint, length, up);
+                    SetPixelsOfLine(currentLine, ref currentTex, Color.blue);
+                    currentTex.Apply();
+                    Repaint();
+                    break;
+                }
+            }
         }
 
         private void SetPixelsOfLine(GunModAttachmentLine gunModAttachmentLine, ref Texture2D texture2D, Color color)
@@ -222,13 +228,15 @@ namespace Editor.GunMods
             texture2D.SetPixels((int)rect.x, (int)rect.y, (int)rect.width, (int)rect.height, pixels);
         }
 
-        private void SetPixelsOfRail(GunModAttachmentRail gunModAttachmentRail, ref Texture2D texture2D, Color color)
+        private void SetPixelsOfRail(GunModAttachmentRail gunModAttachmentRail, Color color)
         {
-            //TODO
+            SetPixelsOfLine(gunModAttachmentRail.LargeSpriteLine, ref _largeWorkTexture2D, color);
+            SetPixelsOfLine(gunModAttachmentRail.SmallSpriteLine, ref _smallWorkTexture2D, color);
         }
-        private void SetPixelsOfRail(GunModAttachmentRail gunModAttachmentRail, ref Texture2D texture2D, ref Texture2D originalTexture)
+        private void ResetPixelsOfRail(GunModAttachmentRail gunModAttachmentRail)
         {
-            //TODO
+            SetPixelsOfLine(gunModAttachmentRail.LargeSpriteLine, ref _largeWorkTexture2D, ref _largeOriginalTexture2D);
+            SetPixelsOfLine(gunModAttachmentRail.SmallSpriteLine, ref _smallWorkTexture2D, ref _smallOriginalTexture2D);
         }
 
 
@@ -273,7 +281,7 @@ namespace Editor.GunMods
                     break;
                 case GunModType.Mod:
                     _currentColor = Color.green;
-                    break;
+                    break;//j9ijij
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -285,6 +293,21 @@ namespace Editor.GunMods
             for (var i = 0; i < Math.Abs(length); ++i)
                 colors[i] = color;
             return colors;
+        }
+        private Color GetColorFromAttachmentType(GunAttachmentType type)
+        {
+            switch (type)
+            {
+                case GunAttachmentType.Barrel:
+                    return Color.blue;
+                case GunAttachmentType.Scope:
+                    return Color.red;
+                    
+                case GunAttachmentType.Stock:
+                    return Color.yellow;
+                default:
+                    throw new ArgumentOutOfRangeException();
+            }
         }
 
     }
