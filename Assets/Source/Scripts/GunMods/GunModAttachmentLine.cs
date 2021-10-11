@@ -14,8 +14,12 @@ namespace GunMods
         public int Length{ get; }
         public bool Up{ get; }
         public Rect Rect { get; }
-        
 
+
+        public GunModAttachmentLine()
+        {
+            Rect = new Rect();
+        }
         public GunModAttachmentLine(Vector2 start, int length, bool up)
         {
             Start = start;
@@ -33,9 +37,9 @@ namespace GunMods
     [Serializable]
     public class GunModAttachmentRail
     {
-        public GunModAttachmentLine LargeSpriteLine { get; set; }
+        public GunModAttachmentLine LargeSpriteLine { get; set; } = new GunModAttachmentLine();
         public bool IsEmpty { get; set; }
-        public GunModAttachmentLine SmallSpriteLine { get; set; }
+        public GunModAttachmentLine SmallSpriteLine { get; set; }  = new GunModAttachmentLine();
 
         public GunAttachmentType AttachmentType { get; set; } = GunAttachmentType.Barrel;
 

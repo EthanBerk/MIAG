@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f211ce5762364e61910105f0be6d64a9, type: 3}
   m_Name: biggggggunmod
   m_EditorClassIdentifier: 
-  gunModController: {fileID: 0}
+  gunModController: {fileID: 8239797684755856550}
   LargeSprite: {fileID: 3442132915880979596, guid: e80b05247dba713488df12900b021c16,
     type: 3}
   SmallSprite: {fileID: 7680155633697698133, guid: e80b05247dba713488df12900b021c16,
@@ -23,3 +23,22 @@ MonoBehaviour:
   StatEffects: []
   attachmentArea: []
   gunModType: 0
+--- !u!114 &8239797684755856550
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2ba0500e4e6d4c0ba636a6345eb5ab29, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  name: 
+  description: 
+  enemyModel: {fileID: 0}
+  health: 20
+  speed: 2
+  detectRange: 10
+  damage: 1
