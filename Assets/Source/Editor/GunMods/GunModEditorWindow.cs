@@ -93,7 +93,7 @@ namespace Editor.GunMods
              for (var i = 0; i < AttachmentRails.Count; i++)
              {
                  var rail = AttachmentRails[i];
-                 if (_currentAttachmentIndex == AttachmentRails.IndexOf(rail))
+                 if (_currentAttachmentIndex == i)
                  {
                      GUILayout.BeginHorizontal("Box");
                  }
@@ -105,7 +105,7 @@ namespace Editor.GunMods
                  ++acc;
                  var gunType = (int) GunMod.gunModType - 1;
                  
-                 gunType = EditorGUILayout.Popup(_currentAttachmentIndex = AttachmentRails.IndexOf(rail), Enum.GetNames(typeof(GunAttachmentType)));
+                 gunType = EditorGUILayout.Popup(AttachmentRails.IndexOf(rail), Enum.GetNames(typeof(GunAttachmentType)));
                  rail.AttachmentType = (GunAttachmentType) gunType;
                  if (GUILayout.Button("Edit"))
                  {
@@ -294,7 +294,7 @@ namespace Editor.GunMods
                     break;
                 case GunModType.Mod:
                     _currentColor = Color.green;
-                    break;//j9ijij
+                    break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
@@ -319,7 +319,7 @@ namespace Editor.GunMods
                 case GunAttachmentType.Stock:
                     return Color.yellow;
                 default:
-                    return Color.black;
+                    return Color.blue;
             }
         }
 
