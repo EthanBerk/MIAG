@@ -71,6 +71,8 @@ namespace Editor.GunMods
                 _smallWorkTexture2D.SetPixels(1,1, (int)_smallSprite.rect.width, (int)_smallSprite.rect.height, spriteColors);
                 _smallWorkTexture2D.Apply();
                 _smallOriginalTexture2D = Instantiate(_smallWorkTexture2D);
+
+                AttachmentRails = GunMod.attachmentArea;
                 
                 Repaint();
                 _hasInitialized = true;
@@ -103,10 +105,9 @@ namespace Editor.GunMods
                  }
                  
                  ++acc;
-                 var gunType = (int) GunMod.gunModType - 1;
                  
-                 gunType = EditorGUILayout.Popup(AttachmentRails.IndexOf(rail), Enum.GetNames(typeof(GunAttachmentType)));
-                 rail.AttachmentType = (GunAttachmentType) gunType;
+                 
+                 rail.AttachmentType = (GunAttachmentType)EditorGUILayout.Popup((int) rail.AttachmentType - 1, Enum.GetNames(typeof(GunAttachmentType))) + 1;
                  if (GUILayout.Button("Edit"))
                  {
                      if (_currentAttachmentIndex > 0)
@@ -145,8 +146,24 @@ namespace Editor.GunMods
              }
              if (GUILayout.Button("save"))
              {
-                 AttachmentRails[_currentAttachmentIndex] = _tempCurrentAttachmentRail;
+                 AttachmentRails[_currentAttachmentIndex].LargeSpriteLine = _tempCurrentAttachmentRail.LargeSpriteLine;
+                 AttachmentRails[_currentAttachmentIndex].SmallSpriteLine = _tempCurrentAttachmentRail.SmallSpriteLine;
                  AttachmentRails[_currentAttachmentIndex].IsEmpty = false;
+             }
+             if (GUILayout.Button("save rails"))
+             {
+                 GunMod.attachmentArea = AttachmentRails;
+                 if (_currentAttachmentIndex > 0)
+                 {
+                     if (AttachmentRails[_currentAttachmentIndex].IsEmpty)
+                         GunMod.attachmentArea.Remove(AttachmentRails[_currentAttachmentIndex]);
+                 }
+                 
+             }
+             if (GUILayout.Button("clear rails"))
+             {
+                 AttachmentRails = new List<GunModAttachmentRail>();
+                 _currentAttachmentIndex = -1;
              }
              
             GUILayout.EndVertical();
@@ -177,7 +194,7 @@ namespace Editor.GunMods
 
 
 
-
+            if(_currentAttachmentIndex < 0) return;
             switch (e.type)
             {
                 case EventType.MouseDown when (largeSpriteTexRect.Contains(e.mousePosition) || smallSpriteTexRect.Contains(e.mousePosition)):
@@ -228,7 +245,7 @@ namespace Editor.GunMods
                      {
                          _tempCurrentAttachmentRail.SmallSpriteLine = currentLine;
                      }
-                    SetPixelsOfLine(currentLine, ref currentTex, Color.blue);
+                    SetPixelsOfLine(currentLine, ref currentTex, GetColorFromAttachmentType(AttachmentRails[_currentAttachmentIndex].AttachmentType));
                      
                      
                      Repaint();
