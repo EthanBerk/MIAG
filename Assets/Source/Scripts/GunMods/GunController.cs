@@ -1,19 +1,16 @@
-﻿using GunMods.Cyberpunk;
+﻿using System;
+using System.Collections.Generic;
+using GunMods.Cyberpunk;
 using UnityEngine;
 
 namespace GunMods
 {
     public class GunController : MonoBehaviour
     {
-        public GameObject bulletPrefab;
-        public float bulletSpeed = 20;
-        
-        private CyberpunkGun _cyberpunkGun;
-        
+        public List<OperatingGunMod> gunMods;
         void Start()
         {
-            
-            _cyberpunkGun = gameObject.GetComponentInChildren<CyberpunkGun>();
+   
         }
 
 
@@ -21,10 +18,14 @@ namespace GunMods
         void Update()
         {
             
-            if (Input.GetMouseButton(0))
-            {
-                _cyberpunkGun.OnShoot();
-            }
+            
         }
+    }
+    [Serializable]
+
+    public class OperatingGunMod
+    {
+        public GunMod gunMod;
+        [SerializeField] private Vector2 position;
     }
 }
