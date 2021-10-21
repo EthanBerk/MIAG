@@ -8,6 +8,7 @@ namespace GunMods
     public class GunController : MonoBehaviour
     {
         public List<OperatingGunMod> gunMods;
+        public GunMod gunBase;
         void Start()
         {
    
