@@ -25,28 +25,36 @@ namespace Source.Scripts.UI
             
             _playerInv = _player.GetComponent<InventoryManger>();
             _playerGun = _player.GetComponent<GunController>();
+            
+            
             float largestHeightOnRow = 0;
             var currentPos = new Vector2();
+            
+            var gunBaseObject = Instantiate(gunModUiObjectPrefab, _canvas.transform, true);
+            gunBaseObject.GetComponent<RectTransform>().position = Vector3.zero;
+            gunBaseObject.GetComponent<GunModUIObject>().Initialize(_playerGun.gunBase);
+
+
             foreach (var gunMod in _playerInv.gunMods)
             {
                 var modObject = Instantiate(gunModUiObjectPrefab, _canvas.transform, true);
                 var rectTransform = modObject.GetComponent<RectTransform>();
                 var rect = rectTransform.rect;
                 var boxOffset = new Vector2(rect.width / 2, rect.height / 2);
-                if (currentPos.x + rectTransform.rect.width > sizeInvBox.x)
+                if (currentPos.x + gunMod.LargeSprite.rect.width > sizeInvBox.x)
                 {
-                    currentPos = new Vector2(0, currentPos.y + largestHeightOnRow);
+                    currentPos = new Vector2(0, currentPos.y - largestHeightOnRow);
                     largestHeightOnRow = 0;
                 }
                 rectTransform.localPosition = originInvBox + currentPos + boxOffset;
-                currentPos = new Vector2(currentPos.x + rect.width, currentPos.y);
+                currentPos = new Vector2(currentPos.x + gunMod.LargeSprite.rect.width, currentPos.y);
                 
                 
-                largestHeightOnRow = rect.height > largestHeightOnRow
-                    ? rect.height
+                largestHeightOnRow = gunMod.LargeSprite.rect.height > largestHeightOnRow
+                    ? gunMod.LargeSprite.rect.height
                     : largestHeightOnRow;
                 
-                rectTransform.localScale = Vector3.one;
+                rectTransform.localScale = new Vector3(1,1, 1);
                 rectTransform.sizeDelta = gunMod.LargeSprite.textureRect.size;
                 modObject.GetComponent<GunModUIObject>().Initialize(gunMod);
             }

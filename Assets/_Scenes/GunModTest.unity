@@ -154,6 +154,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunMods: []
+  gunBase: {fileID: 11400000, guid: 43a0f34b5016ab54cacabf1c9ba63a53, type: 2}
 --- !u!114 &110421261
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -167,6 +168,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gunMods:
+  - {fileID: 11400000, guid: 43a0f34b5016ab54cacabf1c9ba63a53, type: 2}
+  - {fileID: 11400000, guid: 43a0f34b5016ab54cacabf1c9ba63a53, type: 2}
+  - {fileID: 11400000, guid: 43a0f34b5016ab54cacabf1c9ba63a53, type: 2}
+  - {fileID: 11400000, guid: 43a0f34b5016ab54cacabf1c9ba63a53, type: 2}
   - {fileID: 11400000, guid: 43a0f34b5016ab54cacabf1c9ba63a53, type: 2}
 --- !u!4 &110421262
 Transform:
@@ -297,6 +302,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0047687f048f4204a74d6c15b4683351, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sizeInvBox: {x: 40, y: 5}
+  originInvBox: {x: 0, y: 0}
   gunModUiObjectPrefab: {fileID: 378452974714586863, guid: 8737928cc6b21d14cae83ca36a14e385,
     type: 3}
 --- !u!114 &693880712
