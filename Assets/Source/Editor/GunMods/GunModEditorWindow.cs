@@ -32,7 +32,6 @@ namespace Editor.GunMods
         private Vector2 scrollPos;
         
         
-        private int _requiredLength = 2;
         private bool _hasInitialized = false;
         private int _currentAttachmentIndex = -1;
         private GunModAttachmentRail _tempCurrentAttachmentRail= new GunModAttachmentRail();
@@ -235,7 +234,20 @@ namespace Editor.GunMods
                          SetPixelsOfLine(currentLine, ref currentTex, ref currentOriginalTex);
                      var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
                      var length = (int)(up ? row - _startPoint.y : (col - _startPoint.x));
-                     length = Math.Abs(length)< _requiredLength ? Math.Sign(length) * 2 : length;
+
+                     if (largeSpriteTexRect.Contains(e.mousePosition) &&
+                         _tempCurrentAttachmentRail.SmallSpriteLine.Length != 0) ;
+                     {
+                         var maxLength = Mathf.Abs(_tempCurrentAttachmentRail.SmallSpriteLine.Length * 3);
+                         length = Math.Abs(length) > maxLength ? Math.Sign(length) * maxLength : length;
+                     }
+                     if(!largeSpriteTexRect.Contains(e.mousePosition) && 
+                        _tempCurrentAttachmentRail.LargeSpriteLine.Length != 0)
+                     {
+                         var minLength = (int)Mathf.Floor(Mathf.Abs(_tempCurrentAttachmentRail.LargeSpriteLine.Length / 3));
+                         length = Math.Abs(length) < minLength ? Math.Sign(length) * minLength : length;
+                     }
+                     
                      currentLine = new GunModAttachmentLine(_startPoint, length, up);
                      if (largeSpriteTexRect.Contains(e.mousePosition))
                      {
