@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using UnityEngine;
+using UnityEngine.UIElements;
 
 
 namespace GunMods
@@ -33,6 +35,18 @@ namespace GunMods
         }
         
     }
+    [Serializable]
+    public class GunModPlacement
+    {
+        public GunMod GunMod { get; set; }
+        public Double Position { get; set; }
+
+        public GunModPlacement(GunMod mod, Double position)
+        {
+            GunMod = mod;
+            Position = position;
+        }
+    }
 
     [Serializable]
     public class GunModAttachmentRail
@@ -41,14 +55,17 @@ namespace GunMods
         public bool IsEmpty { get; set; }
         public GunModAttachmentLine SmallSpriteLine { get; set; }  = new GunModAttachmentLine();
 
-        public GunAttachmentType AttachmentType { get; set; } = GunAttachmentType.Barrel;
+        public GunModType AttachmentType { get; set; }
+
+        public List<GunModPlacement> GunMods = new List<GunModPlacement>();
+        
 
         public GunModAttachmentRail()
         {
             IsEmpty = true; 
         }
 
-        public GunModAttachmentRail(GunModAttachmentLine largeSpriteLine, GunModAttachmentLine smallSpriteLine, GunAttachmentType attachmentType)
+        public GunModAttachmentRail(GunModAttachmentLine largeSpriteLine, GunModAttachmentLine smallSpriteLine, GunModType attachmentType)
         {
             LargeSpriteLine = largeSpriteLine;
             SmallSpriteLine = smallSpriteLine;
@@ -57,12 +74,7 @@ namespace GunMods
         }
     }
     
-    [Serializable]
-    public enum GunAttachmentType{
-        Barrel,
-        Scope,
-        Stock
-    }
+    
     
 
 }

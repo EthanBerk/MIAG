@@ -22,6 +22,7 @@ namespace GunMods
         {
             gunRotationPoint = Quaternion.Euler(0,0, gunRotationPointGameObject.GetComponent<GunRotationController>().realRotation);
             shootPoint = _shootPointGameObject.transform.position;
+            
         }
     }
 }

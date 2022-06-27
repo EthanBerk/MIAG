@@ -106,7 +106,7 @@ namespace Editor.GunMods
                  ++acc;
                  
                  
-                 rail.AttachmentType = (GunAttachmentType)EditorGUILayout.Popup((int) rail.AttachmentType - 1, Enum.GetNames(typeof(GunAttachmentType))) + 1;
+                 //rail.AttachmentType = EditorGUILayout.Popup((int) rail.AttachmentType - 1, Enum.GetNames()) + 1;
                  if (GUILayout.Button("Edit"))
                  {
                      if (_currentAttachmentIndex > 0)
@@ -185,9 +185,12 @@ namespace Editor.GunMods
             var largeSpriteTexRect = new Rect(largeSpriteRect.position, new Vector2(largeSpriteScale * _largeWorkTexture2D.width, largeSpriteScale * _largeWorkTexture2D.height));
 
             if (Event.current.type == EventType.Repaint)
-            {
-                Graphics.DrawTexture(largeSpriteTexRect, _largeWorkTexture2D);
-                Graphics.DrawTexture(smallSpriteTexRect, _smallWorkTexture2D);
+            { 
+                
+
+                
+                Graphics.DrawTexture(largeSpriteTexRect, _largeWorkTexture2D); 
+               Graphics.DrawTexture(smallSpriteTexRect, _smallWorkTexture2D);
             }
 
 
@@ -231,14 +234,14 @@ namespace Editor.GunMods
                         ? _tempCurrentAttachmentRail.LargeSpriteLine
                         : _tempCurrentAttachmentRail.SmallSpriteLine;
                     
-                         SetPixelsOfLine(currentLine, ref currentTex, ref currentOriginalTex);
+                        SetPixelsOfLine(currentLine, ref currentTex, ref currentOriginalTex);
                      var up = Math.Abs(col - _startPoint.x) < Math.Abs(row - _startPoint.y);
                      var length = (int)(up ? row - _startPoint.y : (col - _startPoint.x));
 
                      if (largeSpriteTexRect.Contains(e.mousePosition) &&
                          _tempCurrentAttachmentRail.SmallSpriteLine.Length != 0) ;
                      {
-                         var maxLength = Mathf.Abs(_tempCurrentAttachmentRail.SmallSpriteLine.Length * 3);
+                         var maxLength = _tempCurrentAttachmentRail.SmallSpriteLine.Length == 0? 20 : Mathf.Abs(_tempCurrentAttachmentRail.SmallSpriteLine.Length * 3);
                          length = Math.Abs(length) > maxLength ? Math.Sign(length) * maxLength : length;
                      }
                      if(!largeSpriteTexRect.Contains(e.mousePosition) && 
@@ -336,16 +339,16 @@ namespace Editor.GunMods
                 colors[i] = color;
             return colors;
         }
-        private Color GetColorFromAttachmentType(GunAttachmentType type)
+        private Color GetColorFromAttachmentType(GunModType type)
         {
             switch (type)
             {
-                case GunAttachmentType.Barrel:
+                case GunModType.Barrel:
                     return Color.blue;
-                case GunAttachmentType.Scope:
+                case GunModType.Base:
                     return Color.red;
                     
-                case GunAttachmentType.Stock:
+                case GunModType.Stock:
                     return Color.yellow;
                 default:
                     return Color.blue;
